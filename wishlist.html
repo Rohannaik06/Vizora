@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist | Vizora</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ================= HEADER & DROPDOWN (Global) ================= */
+        body { background: #f4f7fb; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
+        
+       /* Header & Dropdown Consistency */
+        header { position: sticky; top: 0; z-index: 1000; background: #ffffff; height: 75px; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo { cursor: pointer; }
+        .logo h2 { font-size: 26px; color: #2874f0; font-weight: 700; font-style: italic; margin: 0; }
+        .logo span { color: #ff9f00; }
+        .logo small { color: #878787; font-size: 11px; font-weight: 500; }
+
+        nav { display: flex; align-items: center; gap: 20px; }
+        .dropdown { position: relative; }
+        .dropbtn { background: none; border: none; cursor: pointer; font-weight: 500; font-size: 16px; display: flex; align-items: center; gap: 6px; color: #333; padding: 10px; }
+        .dropdown-content { display: none; position: absolute; top: 100%; right: 0; width: 200px; background: #fff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 999; padding: 10px 0; }
+        .dropdown:hover .dropdown-content { display: block; }
+        .dropdown-content a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; font-size: 14px; color: #333; text-decoration: none; transition: 0.3s; }
+        .dropdown-content a:hover { background: #f5faff; color: #2874f0; padding-left: 25px; }
+        
+        /* ================= WISHLIST PAGE CSS ================= */
+        .wishlist-container { max-width: 1200px; margin: 50px auto; padding: 0 20px; min-height: 50vh; }
+        .page-title { font-size: 24px; color: #212121; font-weight: 600; margin-bottom: 30px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        
+        .empty-wishlist { text-align: center; padding: 80px 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .empty-wishlist i { font-size: 60px; color: #ff9f00; margin-bottom: 20px; }
+        .empty-wishlist h3 { font-size: 22px; color: #333; margin-bottom: 10px; }
+        .empty-wishlist p { color: #777; margin-bottom: 25px; }
+        .empty-wishlist button { background: #2874f0; color: #fff; border: none; padding: 12px 30px; font-size: 15px; font-weight: 600; border-radius: 4px; cursor: pointer; transition: 0.3s; }
+        .empty-wishlist button:hover { background: #0d62e6; }
+
+        /* Grid */
+        .wishlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
+        
+        /* Card */
+        .wish-card { background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #e9e9e9; transition: 0.3s; position: relative; }
+        .wish-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-color: #2874f0; }
+        
+        /* Heart Icon Style (नवीन बदल) */
+        .wishlist-heart { 
+            position: absolute; 
+            top: 15px; 
+            right: 15px; 
+            width: 36px; 
+            height: 36px; 
+            background: #ffffff; 
+            border-radius: 50%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            cursor: pointer; 
+            color: #e53935; /* लाल रंग */
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15); 
+            transition: 0.3s; 
+            z-index: 10; 
+        }
+        .wishlist-heart:hover { 
+            background: #ffebee; /* होव्हर केल्यावर हलका लाल बॅकग्राउंड */
+            transform: scale(1.1); 
+        }
+
+        .wish-img { width: 100%; height: 200px; object-fit: contain; padding: 20px; background: #fafafa; }
+        .wish-details { padding: 15px; }
+        .wish-brand { font-size: 13px; color: #878787; margin-bottom: 5px; }
+        .wish-title { font-size: 16px; color: #212121; font-weight: 600; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .wish-price-row { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .price { font-size: 18px; font-weight: 700; color: #212121; }
+        .original { font-size: 14px; color: #878787; text-decoration: line-through; }
+        
+        .add-cart-btn { width: 100%; background: #2874f0; color: #fff; border: none; padding: 10px; border-radius: 4px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .add-cart-btn:hover { background: #0d62e6; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">
+            <h2>Vizo<span>ra</span></h2>
+            <small>See Beyond Style</small>
+        </div>
+
+        <nav>
+            <div class="dropdown">
+                <button class="dropbtn">
+                    <i class="fa-solid fa-circle-user" style="font-size: 20px; font-weight:600;"></i>
+                    <span id="username">Account</span>
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+                    <a href="#"><i class="fa-regular fa-user"></i> My Profile</a>
+                    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> My Cart</a>
+                    <a href="#"><i class="fa-solid fa-box"></i>My Orders </a>
+                    <hr style="margin: 5px 0; border: none; border-top: 1px solid #f0f0f0;">
+                    <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="wishlist-container">
+        <h2 class="page-title"><i class="fa-solid fa-heart" style="color: #e53935;"></i> My Wishlist</h2>
+        
+        <div id="wishlist-content">
+            </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const storedName = localStorage.getItem("userName");
+            const userId = localStorage.getItem("userId");
+
+            if (storedName) {
+                document.getElementById("username").innerText = storedName;
+            } else {
+                alert("Please login to view your wishlist.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            loadWishlist(userId);
+        });
+
+        function loadWishlist(userId) {
+            fetch(`ViewWishlistServlet?userId=${userId}`)
+            .then(response => response.json())
+            .then(items => {
+                const container = document.getElementById("wishlist-content");
+                
+                if (items.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                            <h3>Your wishlist is empty!</h3>
+                            <p>Save items that you like in your wishlist.</p>
+                            <button onclick="window.location.href='index.html'">Continue Shopping</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '<div class="wishlist-grid">';
+                
+                items.forEach(item => {
+                    html += `
+                        <div class="wish-card" id="wish-item-${item.id}">
+                            
+                            <div class="wishlist-heart" onclick="removeFromWishlist(${item.id})" title="Remove from wishlist">
+                                <i class="fa-solid fa-heart"></i>
+                            </div>
+                            
+                            <img src="images/${item.thumbnail}" alt="${item.name}" class="wish-img">
+                            
+                            <div class="wish-details">
+                                <div class="wish-brand">${item.brand}</div>
+                                <div class="wish-title" title="${item.name}">${item.name}</div>
+                                
+                                <div class="wish-price-row">
+                                    <span class="price">₹${item.sellingPrice}</span>
+                                    ${item.originalPrice > item.sellingPrice ? `<span class="original">₹${item.originalPrice}</span>` : ''}
+                                </div>
+                                
+                                <button class="add-cart-btn" onclick="moveToCart(${item.id})">
+                                    <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                container.innerHTML = html;
+            })
+            .catch(error => console.error("Error loading wishlist:", error));
+        }
+
+        function removeFromWishlist(productId) {
+            const userId = localStorage.getItem("userId");
+            
+            fetch("WishlistServlet", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `userId=${userId}&productId=${productId}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data.trim() === "removed") {
+                    const card = document.getElementById(`wish-item-${productId}`);
+                    card.style.display = "none";
+                    
+                    setTimeout(() => { loadWishlist(userId); }, 500);
+                }
+            });
+        }
+
+        function moveToCart(productId) {
+            const userId = localStorage.getItem("userId");
+            
+            fetch("CartServlet", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `userId=${userId}&productId=${productId}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data.trim() === "success") {
+                    alert("Added to Cart Successfully!");
+                }
+            });
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>

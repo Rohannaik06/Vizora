@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart | Vizora</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ================= GLOBAL & HEADER CSS (For Cart Page) ================= */
+        body { background: #f1f3f6; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
+        
+        header {width: 100%; height: 70px; background: #ffffff; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; box-shadow: 0 2px 4px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000;}
+        .logo{ display:flex; flex-direction:column; cursor:pointer; user-select:none;}
+        .logo h2 { font-size: 26px; color: #2874f0; font-weight: 700;font-style: italic;}
+        .logo span { color: #ff9f00; }
+        .logo small { color: #878787; font-size: 11px; font-weight: 500; }
+
+        .search-box { width: 45%; height: 42px; display: flex; align-items: center; background: #f0f5ff; border: 1px solid #dcdcdc; border-radius: 4px; padding: 0 15px; transition: 0.3s; }
+        .search-box:focus-within { background: #ffffff; border-color: #2874f0; box-shadow: 0 0 5px rgba(40,116,240,0.2); }
+        .search-box input { width: 100%; margin-left: 10px; border: none; outline: none; background: transparent; font-size: 14px; }
+        .search-box i { color: #2874f0; }
+
+        .cart-btn { display: flex; align-items: center; gap: 8px; background: #0d62e6; color: #fff; border: none; padding: 9px 24px; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 14px; transition: 0.2s; }
+        .cart-btn:hover { background: #0b50bc; }
+
+        /* ================= DROPDOWN CSS (Corrected) ================= */
+        .dropdown { position: relative; display: inline-block; }
+        .dropbtn { background: none; border: none; cursor: pointer; font-weight: 500; font-size: 16px; display: flex; align-items: center; gap: 6px; color: #333; padding: 10px; }
+        .dropbtn i { font-size: 16px;}
+        .dropbtn:hover { color: #2874f0; }
+        
+        .dropdown-content { display: none; position: absolute; top: 100%; right: 0; width: 200px; background: #fff; border-radius: 4px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); z-index: 999; padding: 8px 0; margin-top: 5px; }
+        .dropdown:hover .dropdown-content { display: block; }
+        
+        /* Little triangle above dropdown */
+        .dropdown-content::before { content: ""; position: absolute; top: -6px; right: 20px; border-width: 0 6px 6px 6px; border-style: solid; border-color: transparent transparent #fff transparent; }
+        
+        .dropdown-content a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; font-size: 14px; color: #333; transition: 0.2s; text-decoration: none; }
+        .dropdown-content a:hover { background: #f5faff; color: #2874f0; }
+
+        /* ================= CART PAGE CSS ================= */
+        .cart-container { width: 95%; max-width: 1200px; margin: 30px auto; display: flex; gap: 20px; align-items: flex-start; }
+        .cart-left { flex: 2.2; background: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .cart-header { padding: 20px; border-bottom: 1px solid #f0f0f0; }
+        .cart-header h2 { font-size: 18px; font-weight: 600; color: #212121; margin: 0;}
+        
+        .cart-item { display: flex; padding: 20px; border-bottom: 1px solid #f0f0f0; }
+        .cart-item-img { width: 120px; height: 120px; object-fit: contain; margin-right: 20px; }
+        .cart-item-details { flex: 1; }
+        .cart-item-title { font-size: 16px; font-weight: 500; color: #212121; margin-bottom: 5px; margin-top: 0;}
+        .cart-item-brand { font-size: 13px; color: #878787; margin-bottom: 12px; margin-top: 0;}
+        
+        .cart-item-price { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .cart-item-price .price { font-size: 20px; font-weight: 700; color: #212121; }
+        .cart-item-price .original { font-size: 14px; color: #878787; text-decoration: line-through; }
+        
+        .cart-actions { display: flex; align-items: center; gap: 25px; }
+        .qty-control { display: flex; align-items: center; gap: 15px; }
+        .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #c2c2c2; background: #fff; font-size: 18px; cursor: pointer; }
+        .qty-input { width: 45px; height: 30px; text-align: center; border: 1px solid #c2c2c2; border-radius: 2px; font-weight: 500; }
+        .action-btn { background: none; border: none; font-size: 15px; font-weight: 600; color: #212121; cursor: pointer; transition: 0.2s; }
+        .action-btn:hover { color: #2874f0; }
+
+        /* Right Side (Price Summary) */
+        .cart-right { flex: 1; position: sticky; top: 90px; }
+        .price-details-card { background: #fff; border-radius: 4px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .price-details-card h3 { font-size: 15px; color: #878787; font-weight: 600; margin-bottom: 15px; margin-top: 0;}
+        .price-row { display: flex; justify-content: space-between; font-size: 15px; color: #212121; margin-bottom: 15px; }
+        .discount-row { color: #388e3c; }
+        .free-delivery { color: #388e3c; font-weight: 500; }
+        .dashed-line { border-top: 1px dashed #e0e0e0; margin: 15px 0; border-bottom: none; }
+        .total-amount { font-size: 18px; font-weight: 700; }
+        .savings-msg { color: #388e3c; font-size: 15px; font-weight: 600; margin: 0;}
+        
+        .place-order-btn { width: 100%; padding: 15px; background: #fb641b; color: #fff; font-size: 16px; font-weight: 600; border: none; border-radius: 2px; cursor: pointer; }
+        .place-order-btn:hover { background: #df5815; }
+
+        @media (max-width: 900px) {
+            .cart-container { flex-direction: column; }
+            .cart-left, .cart-right { width: 100%; }
+            .cart-right { position: static; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">
+            <h2>Vizo<span>ra</span></h2>
+            <small>See Beyond Style</small>
+        </div>
+
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search for Products, Brands and Categories">
+        </div>
+
+        <nav></nav>
+            <div id="afterLogin" style="display: flex; gap: 20px; align-items: center;">
+                
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        <i class="fa-solid fa-circle-user" style="font-size: 20px; font-weight:600;" ></i>
+                        <span id="username">Account</span>
+                        <i class="fa-solid fa-angle-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+                        <a href="wishlist.html"> <i class="fa-regular fa-heart"></i> Wishlist</a>
+                        <a href="profile.html"><i class="fa-regular fa-user"></i> My Profile</a>
+                        <a href="orders.html"><i class="fa-solid fa-box"></i> My Orders</a>
+                        <hr style="margin: 5px 0; border: none; border-top: 1px solid #f0f0f0;">
+                        <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="cart-container">
+        <div class="cart-left">
+            <div class="cart-header">
+                <h2>My Cart (<span id="cart-item-count">0</span>)</h2>
+            </div>
+            
+            <div id="cart-items-container">
+                </div>
+        </div>
+
+        <div class="cart-right">
+            <div class="price-details-card">
+                <h3>PRICE DETAILS</h3>
+                <hr style="border-top: 1px solid #f0f0f0; margin-bottom: 15px; border-bottom:none;">
+                <div class="price-row">
+                    <span>Price (<span id="summary-count">0</span> items)</span>
+                    <span id="total-mrp">₹0</span>
+                </div>
+                <div class="price-row discount-row">
+                    <span>Discount</span>
+                    <span id="total-discount">- ₹0</span>
+                </div>
+                <div class="price-row">
+                    <span>Delivery Charges</span>
+                    <span class="free-delivery">Free</span>
+                </div>
+                <hr class="dashed-line">
+                <div class="price-row total-amount">
+                    <span>Total Amount</span>
+                    <span id="total-amount">₹0</span>
+                </div>
+                <hr class="dashed-line">
+                <p class="savings-msg">You will save <span id="total-savings">₹0</span> on this order</p>
+            </div>
+            <button class="place-order-btn">PLACE ORDER</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // युजरचे नाव सेट करणे
+            const storedName = localStorage.getItem("userName");
+            if (storedName) {
+                document.getElementById("username").innerText = storedName;
+            } else {
+                // जर नाव नसेल तर लॉगिन पेजवर पाठवा
+                window.location.href = "login.html";
+            }
+            
+            loadCartPage();
+        });
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+
+        function loadCartPage() {
+            const userId = localStorage.getItem("userId");
+            if (!userId) return;
+
+            fetch(`ViewCartServlet?userId=${userId}`)
+            .then(response => response.json())
+            .then(cartItems => {
+                const container = document.getElementById("cart-items-container");
+                
+                if (cartItems.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align:center; padding: 60px 20px;">
+                            <i class="fa-solid fa-cart-shopping" style="font-size: 60px; color: #c2c2c2; margin-bottom: 20px;"></i>
+                            <h3 style="font-size: 20px; margin-bottom: 10px;">Your cart is empty!</h3>
+                            <p style="color: #878787; margin-bottom: 20px;">Add items to it now.</p>
+                            <button onclick="window.location.href='index.html'" style="background: #2874f0; color: #fff; padding: 10px 30px; border: none; border-radius: 2px; cursor: pointer; font-weight: 600;">Shop Now</button>
+                        </div>`;
+                    return;
+                }
+
+                container.innerHTML = "";
+                let totalMrp = 0;
+                let totalSellingPrice = 0;
+                let totalItems = 0;
+
+                cartItems.forEach(item => {
+                    totalMrp += (item.original * item.quantity);
+                    totalSellingPrice += (item.price * item.quantity);
+                    totalItems += item.quantity;
+
+                    container.innerHTML += `
+                        <div class="cart-item">
+                            <img src="images/${item.image}" alt="${item.name}" class="cart-item-img">
+                            <div class="cart-item-details">
+                                <h3 class="cart-item-title">${item.name}</h3>
+                                <p class="cart-item-brand">${item.brand}</p>
+                                <div class="cart-item-price">
+                                    <span class="price">₹${item.price * item.quantity}</span>
+                                    ${item.original > item.price ? `<span class="original">₹${item.original * item.quantity}</span>` : ''}
+                                </div>
+                                <div class="cart-actions">
+                                    <div class="qty-control">
+                                        <button class="qty-btn" onclick="updateQty(${item.cartId}, -1)">-</button>
+                                        <input type="text" class="qty-input" value="${item.quantity}" readonly>
+                                        <button class="qty-btn" onclick="updateQty(${item.cartId}, 1)">+</button>
+                                    </div>
+                                    <button class="action-btn" onclick="removeCartItem(${item.cartId})">REMOVE</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                document.getElementById("cart-item-count").innerText = totalItems;
+                document.getElementById("summary-count").innerText = totalItems;
+                document.getElementById("total-mrp").innerText = `₹${totalMrp}`;
+                document.getElementById("total-discount").innerText = `- ₹${totalMrp - totalSellingPrice}`;
+                document.getElementById("total-amount").innerText = `₹${totalSellingPrice}`;
+                document.getElementById("total-savings").innerText = `₹${totalMrp - totalSellingPrice}`;
+            })
+            .catch(error => console.error("Error loading cart:", error));
+        }
+
+        // ================= UPDATE QUANTITY =================
+        function updateQty(cartId, change) {
+            fetch("CartActionServlet", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `action=update&cartId=${cartId}&change=${change}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data.trim() === "success") {
+                    loadCartPage(); // डेटाबेस अपडेट झाल्यावर पेज आपोआप रिफ्रेश (Update) होईल
+                } else {
+                    alert("Unable to update quantity.");
+                }
+            })
+            .catch(error => console.error("Error updating qty:", error));
+        }
+
+        // ================= REMOVE CART ITEM =================
+        function removeCartItem(cartId) {
+            // डिलीट करण्यापूर्वी युजरला विचारणे (Professional Practice)
+            if (!confirm("Are you sure you want to remove this item from the cart?")) {
+                return; 
+            }
+
+            fetch("CartActionServlet", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `action=remove&cartId=${cartId}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data.trim() === "success") {
+                    loadCartPage(); // आयटम गेल्यावर पेज आणि हिशोब आपोआप अपडेट होईल
+                } else {
+                    alert("Failed to remove item.");
+                }
+            })
+            .catch(error => console.error("Error removing item:", error));
+        }
+    </script>
+</body>
+</html>

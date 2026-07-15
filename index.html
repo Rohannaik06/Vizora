@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Vizora | See Beyond Style</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="product.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+    <div class="logo">
+        <h2>Vizo<span>ra</span></h2>
+        <small>See Beyond Style</small>
+    </div>
+
+    <!-- Search -->
+
+    <div class="search-box">
+
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+        type="text"
+        id="searchInput"
+        placeholder="Search for Products, Brands and Categories"
+        onkeyup="searchProducts()">
+
+    </div>
+
+    <!-- Right Side -->
+
+    <nav>
+
+        <!-- Notification -->
+
+        <button class="notify-btn">
+
+            <i class="fa-regular fa-bell"></i>
+
+        </button>
+
+        <!-- Cart -->
+
+        <button class="cart-btn" onclick="window.location.href='cart.html'">
+            <i class="fa-solid fa-cart-shopping"></i> Cart
+        </button>
+
+        <!-- Before Login -->
+
+        <div id="beforeLogin">
+
+            <button
+            class="login-btn"
+            onclick="window.location.href='login.html'">
+
+                <i class="fa-regular fa-user"></i>
+
+                Login
+
+            </button>
+
+        </div>
+
+        <!-- After Login -->
+
+        <div id="afterLogin">
+
+            <div class="profile-dropdown">
+
+                <button class="profile-btn">
+
+                    <i class="fa-solid fa-circle-user"></i>
+
+                    <span id="username">Account</span>
+
+                    <i class="fa-solid fa-angle-down"></i>
+
+                </button>
+
+                <div class="profile-menu">
+
+                    <a href="profile.html">
+
+                        <i class="fa-regular fa-user"></i>
+
+                        My Profile
+
+                    </a>
+
+                    <a href="orders.html">
+
+                        <i class="fa-solid fa-box"></i>
+
+                        My Orders
+
+                    </a>
+
+                    <a href="wishlist.html">
+
+                        <i class="fa-regular fa-heart"></i>
+
+                        Wishlist
+
+                    </a>
+
+                    <a href="cart.html">
+
+                        <i class="fa-solid fa-cart-shopping"></i>
+
+                        My Cart
+
+                    </a>
+
+                    <a href="#">
+
+                        <i class="fa-solid fa-gear"></i>
+
+                        Settings
+
+                    </a>
+
+                    <a href="help.html">
+
+                        <i class="fa-regular fa-circle-question"></i>
+
+                        Help Center
+
+                    </a>
+
+                    <hr>
+
+                    <a href="#" onclick="logout()">
+
+                        <i class="fa-solid fa-right-from-bracket"></i>
+
+                        Logout
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</header>
+
+<!-- ================= BANNER ================= -->
+
+<div class="banner">
+
+    <div class="slider">
+
+        <img src="images/offer-banner.jpg" class="slide active">
+
+        <img src="images/banner2.jpg" class="slide">
+
+        <img src="images/banner3.jpg" class="slide">
+
+    </div>
+
+</div>
+
+<!-- ================= FILTER ================= -->
+
+<div class="filter-bar">
+
+    <button onclick="filterProducts('All')" class="active">All</button>
+
+    <button onclick="filterProducts('New Arrival')">New Arrival</button>
+
+    <button onclick="filterProducts('Sunglasses')">Sunglasses</button>
+
+    <button onclick="filterProducts('Men')">Men</button>
+
+    <button onclick="filterProducts('Women')">Women</button>
+
+    <button onclick="filterProducts('Polarized')">Polarized</button>
+
+    <button onclick="filterProducts('Wayfarer')">Wayfarer</button>
+
+    <button onclick="filterProducts('Round')">Round</button>
+
+    <button onclick="filterProducts('Rimless')">Rimless</button>
+
+    <button onclick="filterProducts('Aviator')">Aviator</button>
+
+    <button onclick="filterProducts('Rectangle')">Rectangle</button>
+
+</div>
+
+<!-- ================= PRODUCTS ================= -->
+
+<div id="product-grid" class="product-grid"></div>
+
+
+
+<footer class="professional-footer">
+    <div class="footer-container">
+        
+        <div class="footer-col">
+            <div class="footer-logo">
+                <h2>Vizo<span>ra</span></h2>
+            </div>
+            <p>Your ultimate destination for premium eyewear. We provide the best quality sunglasses to help you see beyond style.</p>
+            <div class="social-links">
+                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">Shop Collection</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact Support</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Customer Policies</h3>
+            <ul>
+                <li><a href="help.html">FAQ & Help</a></li>
+                <li><a href="#">Return Policy</a></li>
+                <li><a href="#">Shipping Info</a></li>
+                <li><a href="#">Terms & Conditions</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Newsletter</h3>
+            <p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
+            <div class="subscribe-box">
+                <input type="email" placeholder="Enter your email">
+                <button><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="footer-bottom">
+        <p>&copy; 2026 Vizora. All Rights Reserved.</p>
+        <div class="payment-icons">
+            <i class="fa-brands fa-cc-visa"></i>
+            <i class="fa-brands fa-cc-mastercard"></i>
+            <i class="fa-brands fa-cc-paypal"></i>
+            <i class="fa-brands fa-cc-amazon-pay"></i>
+        </div>
+    </div>
+</footer>
+
+<!-- ================= SCRIPT ================= -->
+<script src="script.js"></script>
+
+</body>
+</html>

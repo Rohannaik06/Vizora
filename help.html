@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vizora | Help Center</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Inter',sans-serif;
+        }
+
+        html{
+            scroll-behavior:smooth;
+        }
+
+        body{
+            background:#f4f7fb;
+            color:#1e293b;
+            overflow-x:hidden;
+        }
+
+        a{
+            text-decoration:none;
+            color:inherit;
+        }
+
+        /*========================
+            HEADER & LOGO
+        =========================*/
+
+        header{
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:78px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:0 70px;
+            background:rgba(255,255,255,.95); /* Thicker background for header */
+            backdrop-filter:blur(18px);
+            border-bottom:1px solid rgba(0,0,0,.05);
+            z-index:999;
+            box-shadow: 0 2px 10px rgba(0,0,0,.05);
+        }
+
+        /* Standard Vizora Logo */
+        .logo{ cursor:pointer; }
+        .logo h2{ font-size:26px; color:#2874f0; font-weight:700; font-style:italic; margin:0;}
+        .logo span{ color:#ff9f00; }
+        .logo small{ color:#878787; font-size:11px; font-weight:500; letter-spacing:0.5px;}
+
+        nav{
+            display:flex;
+            align-items:center;
+            gap:18px;
+        }
+
+        .dropbtn{
+            background:white;
+            border:none;
+            padding:10px 22px;
+            border-radius:50px;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            font-weight:600;
+            color:#334155;
+            box-shadow: 0 4px 15px rgba(0,0,0,.06);
+            transition:.35s;
+        }
+
+        .dropbtn:hover{
+            transform:translateY(-2px);
+            color: #2874f0;
+            box-shadow: 0 8px 20px rgba(40,116,240,.15);
+        }
+
+        .dropdown{ position:relative; }
+
+        .dropdown-content{
+            position:absolute;
+            top:55px;
+            right:0;
+            width:220px;
+            background:white;
+            border-radius:8px;
+            overflow:hidden;
+            display:none;
+            box-shadow: 0 10px 30px rgba(0,0,0,.15);
+        }
+
+        .dropdown:hover .dropdown-content{ display:block; }
+
+        .dropdown-content a{
+            display:flex;
+            gap:15px;
+            padding:15px 20px;
+            transition:.3s;
+            color:#475569;
+            font-weight:500;
+            font-size: 16px;
+        }
+
+        .dropdown-content a:hover{
+            background:#f5faff;
+            color:#2874f0;
+            padding-left:25px;
+        }
+
+        /*==========================
+            HERO
+        ==========================*/
+        .hero{
+            position:relative;
+            margin-top:78px;
+            min-height:520px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            overflow:hidden;
+            background: linear-gradient(135deg, #172337, #2874f0); /* Matched with theme */
+        }
+        .hero::before, .hero::after{
+            content:""; position:absolute; background:rgba(255,255,255,.05); border-radius:50%; filter:blur(5px);
+        }
+        .hero::before{ width:450px; height:450px; left:-120px; top:-100px; }
+        .hero::after{ width:350px; height:350px; right:-120px; bottom:-120px; }
+
+        .hero-content{ position:relative; z-index:10; max-width:900px; padding:20px; color:white; }
+        .hero h1{ font-size:60px; font-weight:800; margin-bottom:20px; line-height:1.1; }
+        .hero p{ font-size:18px; opacity:.95; line-height:1.8; max-width:760px; margin:auto; }
+
+        .search-box{ margin:45px auto 0; width:100%; max-width:720px; position:relative; }
+        .search-box input{ width:100%; padding:22px 65px; border:none; outline:none; border-radius:60px; font-size:17px; box-shadow: 0 20px 40px rgba(0,0,0,.18); }
+        .search-box i{ position:absolute; left:28px; top:24px; color:#64748b; font-size:20px; }
+
+        .quick-actions{ margin-top:40px; display:flex; justify-content:center; gap:20px; flex-wrap:wrap; }
+        .quick-btn{ background:rgba(255,255,255,.15); backdrop-filter:blur(20px); color:white; padding:16px 28px; border-radius:50px; border:1px solid rgba(255,255,255,.25); transition:.35s; display:flex; align-items:center; gap:12px; font-weight:600; cursor: pointer;}
+        .quick-btn:hover{ background:white; color:#2874f0; transform:translateY(-5px); }
+
+        @media(max-width:900px){
+            header{ padding:20px; }
+            .hero h1{ font-size:42px; }
+            .hero{ min-height:600px; }
+            .search-box{ width:95%; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo" onclick="location.href='index.html'">
+        <h2>Vizo<span>ra</span></h2>
+        <small>See Beyond Style</small>
+    </div>
+
+    <nav>
+        <div class="dropdown">
+            <button class="dropbtn">
+                <i class="fa-solid fa-circle-user"></i>
+                <span id="username">Account</span>
+                <i class="fa-solid fa-angle-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="#"><i class="fa-regular fa-user"></i> My Profile</a>
+                <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> My Cart</a>
+                <a href="#"><i class="fa-regular fa-heart"></i> Wishlist</a>
+                <a href="cart.html"><i class="fa-solid fa-box"></i> My Orders</a>
+                <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>How can we help you today?</h1>
+        <p>Find answers instantly, track your orders, request returns, explore FAQs, or connect with our support team. We're here to make your Vizora experience effortless.</p>
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search for returns, shipping, payment, warranty...">
+        </div>
+        <div class="quick-actions">
+            <div class="quick-btn"><i class="fa-solid fa-box"></i> Track Order</div>
+            <div class="quick-btn"><i class="fa-solid fa-rotate-left"></i> Return Order</div>
+            <div class="quick-btn"><i class="fa-solid fa-headset"></i> Contact Support</div>
+        </div>
+    </div>
+</section>
+
+<!-- PART 2 STARTS HERE -->
+<div class="help-container">
+<style>
+.help-container{ max-width:1300px; margin:80px auto; padding:0 30px; }
+.section-title{ text-align:center; margin-bottom:12px; font-size:40px; font-weight:800; color:#0f172a; }
+.section-subtitle{ text-align:center; color:#64748b; margin-bottom:55px; font-size:17px; }
+
+/* SUPPORT CARDS */
+.support-grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(310px,1fr)); gap:30px; margin-bottom:90px; }
+.support-card{ background:white; border-radius:24px; padding:40px 35px; transition:.4s; cursor:pointer; border:1px solid #e2e8f0; box-shadow: 0 15px 35px rgba(0,0,0,.05); position:relative; overflow:hidden; }
+.support-card::before{ content:""; position:absolute; width:180px; height:180px; background: linear-gradient(135deg,#2874f0,#0d62e6); opacity:.06; border-radius:50%; right:-70px; top:-70px; }
+.support-card:hover{ transform: translateY(-12px); box-shadow: 0 25px 50px rgba(40,116,240,.12); border-color:#2874f0;}
+.support-icon{ width:85px; height:85px; border-radius:22px; display:flex; justify-content:center; align-items:center; font-size:32px; color:white; margin-bottom:25px; background: linear-gradient(135deg, #2874f0, #0d62e6); }
+.support-card h3{ font-size:24px; margin-bottom:15px; color:#0f172a; }
+.support-card p{ color:#64748b; line-height:1.8; font-size:15px; margin-bottom:30px; }
+.learn-more{ display:inline-flex; gap:10px; align-items:center; color:#2874f0; font-weight:700; transition:.3s; }
+.support-card:hover .learn-more{ gap:18px; }
+
+/* STATS */
+.stats{ margin:100px 0; display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:30px; }
+.stat-card{ background: linear-gradient(145deg,#ffffff,#f8fafc); border-radius:22px; padding:35px; text-align:center; box-shadow: 0 15px 35px rgba(0,0,0,.05); transition:.35s; border:1px solid #e2e8f0;}
+.stat-card:hover{ transform:translateY(-8px); border-color:#2874f0;}
+.stat-card h2{ font-size:44px; color:#2874f0; margin-bottom:8px; }
+.stat-card p{ color:#64748b; font-weight:600; }
+
+/* CONTACT STRIP */
+.contact-strip{ margin:80px 0; border-radius:28px; padding:50px; color:white; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:25px; background: linear-gradient(135deg, #172337, #2874f0); }
+.contact-strip h2{ font-size:34px; margin-bottom:12px; }
+.contact-strip p{ opacity:.95; max-width:650px; line-height:1.7; }
+.contact-btn{ padding:18px 35px; border-radius:50px; background:white; color:#2874f0; font-weight:700; transition:.35s; }
+.contact-btn:hover{ transform:scale(1.05); }
+
+@media(max-width:900px){ .section-title{ font-size:32px; } .contact-strip{ text-align:center; justify-content:center; } }
+</style>
+
+<h2 class="section-title">Need Instant Support?</h2>
+<p class="section-subtitle">Choose the option that best matches your issue. Our support team is always ready to help.</p>
+
+<div class="support-grid">
+    <div class="support-card">
+        <div class="support-icon"><i class="fa-solid fa-box"></i></div>
+        <h3>Track Your Order</h3>
+        <p>View your shipment status in real-time, estimated delivery date, and courier information instantly.</p>
+        <div class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></div>
+    </div>
+    <div class="support-card">
+        <div class="support-icon"><i class="fa-solid fa-rotate-left"></i></div>
+        <h3>Returns & Exchanges</h3>
+        <p>Didn't like the product? Start a return or exchange request within 14 days quickly and easily.</p>
+        <div class="learn-more">Learn More <i class="fa-solid fa-arrow-right"></i></div>
+    </div>
+    <div class="support-card">
+        <div class="support-icon"><i class="fa-solid fa-headset"></i></div>
+        <h3>24×7 Customer Support</h3>
+        <p>Need immediate assistance? Our support specialists are available anytime via email or live chat.</p>
+        <div class="learn-more">Contact Us <i class="fa-solid fa-arrow-right"></i></div>
+    </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+    <div class="stat-card"><h2>50K+</h2><p>Happy Customers</p></div>
+    <div class="stat-card"><h2>98%</h2><p>Positive Reviews</p></div>
+    <div class="stat-card"><h2>24×7</h2><p>Customer Support</p></div>
+    <div class="stat-card"><h2>14 Days</h2><p>Easy Returns</p></div>
+</div>
+
+<!-- CONTACT BANNER -->
+<div class="contact-strip">
+    <div>
+        <h2>Still Need Help?</h2>
+        <p>Can't find the answer you're looking for? Reach out to our friendly support team, and we'll get back to you as quickly as possible.</p>
+    </div>
+    <a href="#" class="contact-btn">Contact Support</a>
+</div>
+
+<!-- PREMIUM FAQ SECTION -->
+<style>
+.faq-section{ margin:90px 0; }
+.faq-title{ text-align:center; font-size:40px; font-weight:800; color:#0f172a; margin-bottom:15px; }
+.faq-subtitle{ text-align:center; color:#64748b; font-size:17px; margin-bottom:55px; }
+.faq-wrapper{ display:flex; flex-direction:column; gap:20px; }
+.faq-item{ background:#ffffff; border-radius:12px; overflow:hidden; border:1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,.03); transition:.35s; }
+.faq-item:hover{ box-shadow: 0 10px 25px rgba(40,116,240,.08); border-color:#2874f0;}
+.faq-question{ width:100%; padding:25px 30px; border:none; background:white; display:flex; justify-content:space-between; align-items:center; cursor:pointer; font-size:17px; font-weight:600; color:#0f172a; transition:.35s; }
+.faq-question:hover{ color:#2874f0; }
+.faq-question.active{ color:#2874f0; border-left:4px solid #2874f0; padding-left:26px;}
+.faq-question i{ font-size:16px; transition:.4s; color:#878787;}
+.faq-question.active i{ transform:rotate(180deg); color:#2874f0;}
+.faq-answer{ max-height:0; overflow:hidden; transition:max-height .45s ease; background:#f8fafc; }
+.faq-answer p{ padding:0 30px 25px; color:#475569; line-height:1.8; font-size:15px; margin:0;}
+</style>
+
+<section class="faq-section">
+    <h2 class="faq-title">Frequently Asked Questions</h2>
+    <p class="faq-subtitle">Everything you need to know about Vizora.</p>
+    <div class="faq-wrapper">
+        <div class="faq-item">
+            <button class="faq-question">What is your return policy? <i class="fa-solid fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>We offer a hassle-free 14-day return policy. Products should be unused, with original packaging and tags. Once approved, refunds are processed within 5–7 business days.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">How long does delivery take? <i class="fa-solid fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>Orders are usually delivered within 3–5 business days. Metro cities may receive deliveries faster, while remote locations may require additional time.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Do all sunglasses provide UV protection? <i class="fa-solid fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>Yes. Every pair of Vizora sunglasses includes premium UV400 protection, blocking 100% of harmful UVA and UVB rays.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Can I cancel my order? <i class="fa-solid fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>Orders can be cancelled before shipment from your account dashboard. After dispatch, you may refuse delivery or initiate a return request.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Which payment methods are accepted? <i class="fa-solid fa-chevron-down"></i></button>
+            <div class="faq-answer"><p>We accept UPI, Credit Cards, Debit Cards, Net Banking, Wallets, and Cash on Delivery for eligible locations.</p></div>
+        </div>
+    </div>
+</section>
+</div> <!-- Close Help Container -->
+
+<!-- =========================
+      PROFESSIONAL FOOTER
+==========================-->
+<style>
+/* Footer Customization for matching index.html */
+.professional-footer { background-color: #172337; color: #ffffff; padding: 60px 0 0 0; margin-top: 50px; border-top: 1px solid #e0e0e0; }
+.footer-container { width: 95%; max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 40px; padding-bottom: 50px; }
+.footer-col .footer-logo h2 { font-size: 28px; font-style: italic; margin-bottom: 15px; color: #2874f0; }
+.footer-col .footer-logo span { color: #ff9f00; }
+.footer-col p { font-size: 14px; color: #878787; line-height: 1.6; margin-bottom: 20px; }
+.footer-col h3 { font-size: 18px; margin-bottom: 25px; font-weight: 500; position: relative; color: #ffffff; }
+.footer-col h3::after { content: ''; position: absolute; left: 0; bottom: -8px; background-color: #2874f0; height: 2px; width: 40px; }
+.footer-col ul { list-style: none; padding:0; margin:0;}
+.footer-col ul li:not(:last-child) { margin-bottom: 15px; }
+.footer-col ul li a { font-size: 14px; color: #878787; text-decoration: none; transition: all 0.3s ease; }
+.footer-col ul li a:hover { color: #ffffff; padding-left: 6px; }
+.subscribe-box { display: flex; align-items: center; margin-top: 15px; }
+.subscribe-box input { width: 100%; padding: 12px 15px; border: none; border-radius: 4px 0 0 4px; outline: none; font-size: 14px; background: #ffffff; }
+.subscribe-box button { padding: 12px 18px; background-color: #ff9f00; border: none; border-radius: 0 4px 4px 0; color: white; cursor: pointer; font-size: 14px; transition: 0.3s; }
+.subscribe-box button:hover { background-color: #e68f00; }
+.footer-bottom { background-color: #0b1423; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; }
+.footer-bottom p { font-size: 13px; color: #878787; margin: 0; text-align:center; width:100%;}
+@media(max-width: 1024px){ .footer-container { grid-template-columns: repeat(2, 1fr); } }
+@media(max-width: 768px){ .footer-container { grid-template-columns: 1fr; gap: 30px; } }
+</style>
+
+<footer class="professional-footer">
+    <div class="footer-container">
+        <div class="footer-col">
+            <div class="footer-logo"><h2>Vizo<span>ra</span></h2></div>
+            <p>Your ultimate destination for premium eyewear. We provide the best quality sunglasses to help you see beyond style.</p>
+        </div>
+        <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">Shop Collection</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="contact.html">Contact Support</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h3>Customer Policies</h3>
+            <ul>
+                <li><a href="help.html">FAQ & Help</a></li>
+                <li><a href="returns.html">Return Policy</a></li>
+                <li><a href="#">Shipping Info</a></li>
+                <li><a href="#">Terms & Conditions</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h3>Newsletter</h3>
+            <p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
+            <div class="subscribe-box">
+                <input type="email" placeholder="Enter your email">
+                <button><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Vizora. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    /* ===========================
+        USER NAME
+    =========================== */
+    const username = document.getElementById("username");
+    const storedName = localStorage.getItem("userName");
+    if (storedName && username) {
+        username.textContent = storedName;
+    }
+
+    /* ===========================
+        FAQ ACCORDION
+    =========================== */
+    const questions = document.querySelectorAll(".faq-question");
+    questions.forEach(question => {
+        question.addEventListener("click", function () {
+            questions.forEach(item => {
+                if (item !== this) {
+                    item.classList.remove("active");
+                    item.nextElementSibling.style.maxHeight = null;
+                }
+            });
+            this.classList.toggle("active");
+            const answer = this.nextElementSibling;
+            if (this.classList.contains("active")) {
+                answer.style.maxHeight = answer.scrollHeight + "px";
+            } else {
+                answer.style.maxHeight = null;
+            }
+        });
+    });
+
+    /* ===========================
+        SEARCH FAQ
+    =========================== */
+    const search = document.querySelector(".search-box input");
+    const faqItems = document.querySelectorAll(".faq-item");
+    if (search) {
+        search.addEventListener("keyup", () => {
+            const value = search.value.toLowerCase();
+            faqItems.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(value)) {
+                    item.style.display = "block";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        });
+    }
+
+    /* ===========================
+        COUNTER ANIMATION
+    =========================== */
+    const counters = document.querySelectorAll(".stat-card h2");
+    counters.forEach(counter => {
+        const original = counter.innerText;
+        if (!original.includes("+") && !original.includes("%") && !original.includes("×") && !original.includes("Days")) return;
+        let target = parseInt(original);
+        if (isNaN(target)) return;
+        let count = 0;
+        const speed = Math.ceil(target / 80);
+        const update = () => {
+            count += speed;
+            if (count >= target) {
+                counter.innerText = original;
+            } else {
+                counter.innerText = count + (original.includes("%") ? "%" : "+");
+                requestAnimationFrame(update);
+            }
+        };
+        update();
+    });
+
+    /* ===========================
+        SCROLL ANIMATION
+    =========================== */
+    const animatedElements = document.querySelectorAll(".support-card,.stat-card,.faq-item,.contact-strip");
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = "1";
+                entry.target.style.transform = "translateY(0)";
+            }
+        });
+    }, { threshold: .15 });
+
+    animatedElements.forEach(el => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(50px)";
+        el.style.transition = ".8s ease";
+        observer.observe(el);
+    });
+
+    /* ===========================
+        SUPPORT CARD CLICK
+    =========================== */
+    const cards = document.querySelectorAll(".support-card");
+    cards[0]?.addEventListener("click", () => { window.location.href = "orders.html"; });
+    cards[1]?.addEventListener("click", () => { window.location.href = "returns.html"; });
+    cards[2]?.addEventListener("click", () => { window.location.href = "contact.html"; });
+
+    /* ===========================
+        QUICK ACTION BUTTONS
+    =========================== */
+    document.querySelectorAll(".quick-btn").forEach(btn => {
+        btn.addEventListener("mouseenter", () => { btn.style.transform = "translateY(-6px) scale(1.03)"; });
+        btn.addEventListener("mouseleave", () => { btn.style.transform = "translateY(0)"; });
+    });
+});
+
+/* ===========================
+    LOGOUT
+=========================== */
+function logout() {
+    if (confirm("Are you sure you want to logout?")) {
+        localStorage.clear();
+        window.location.href = "index.html";
+    }
+}
+</script>
+
+</body>
+</html>

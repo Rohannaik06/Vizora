@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout | Vizora</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* ================= GLOBAL ================= */
+        body { background: #f1f3f6; font-family: 'Inter', sans-serif; margin: 0; padding: 0; color: #212121; }
+        * { box-sizing: border-box; }
+
+       /* Secure Checkout Header (Distraction Free) */
+        header { position: sticky; top: 0; width: 100%; height: 75px; background: #ffffff; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; box-sizing: border-box; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000; border-bottom: 2px solid #2874f0;}
+        .logo { cursor: pointer; text-align: left; }
+        .logo h2 { font-size: 26px; color: #2874f0; font-weight: 700; font-style: italic; margin: 0; }
+        .logo span { color: #ff9f00; }
+        .secure-badge { color: #388e3c; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        
+        /* ================= LAYOUT ================= */
+        .checkout-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: flex; gap: 30px; align-items: flex-start; }
+        .left-col { flex: 2; display: flex; flex-direction: column; gap: 20px; }
+        .right-col { flex: 1; position: sticky; top: 100px; }
+
+        /* Sections (Boxes) */
+        .checkout-section { background: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+        .section-header { background: #2874f0; color: #fff; padding: 15px 20px; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 12px; }
+        .section-header span { background: #fff; color: #2874f0; width: 24px; height: 24px; display: flex; justify-content: center; align-items: center; border-radius: 4px; font-size: 13px; }
+        .section-content { padding: 25px; }
+
+        /* ================= FORMS ================= */
+        .form-row { display: flex; gap: 20px; margin-bottom: 20px; }
+        .input-group { flex: 1; display: flex; flex-direction: column; }
+        .input-group label { font-size: 13px; color: #878787; margin-bottom: 8px; font-weight: 500; }
+        .input-group input, .input-group textarea { padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #212121; outline: none; background: #fff; transition: 0.3s; font-family: 'Inter', sans-serif;}
+        .input-group input:focus, .input-group textarea:focus { border-color: #2874f0; }
+
+        /* ================= PAYMENT OPTIONS ================= */
+        .payment-option { border: 1px solid #e0e0e0; border-radius: 4px; margin-bottom: 15px; overflow: hidden; transition: 0.3s; }
+        .payment-option.active { border-color: #2874f0; background: #f5faff; }
+        .payment-header { padding: 18px 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; font-weight: 500; }
+        .payment-header input[type="radio"] { accent-color: #2874f0; width: 18px; height: 18px; cursor: pointer; }
+        .payment-header i { font-size: 20px; color: #878787; width: 30px; text-align: center; }
+        .payment-option.active .payment-header i { color: #2874f0; }
+        
+        .payment-body { padding: 0 20px 20px 65px; display: none; }
+        .payment-option.active .payment-body { display: block; }
+
+        /* ================= ORDER SUMMARY (Right Col) ================= */
+        .summary-box { background: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 25px; }
+        .summary-title { font-size: 16px; font-weight: 600; color: #878787; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px; margin-bottom: 20px; text-transform: uppercase; }
+        
+        .summary-product { display: flex; gap: 15px; margin-bottom: 20px; }
+        .summary-product img { width: 70px; height: 70px; object-fit: contain; border: 1px solid #f0f0f0; border-radius: 4px; padding: 5px; }
+        .summary-p-details h4 { margin: 0 0 5px 0; font-size: 15px; font-weight: 500; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .summary-p-details p { margin: 0; font-size: 13px; color: #878787; }
+
+        .price-row { display: flex; justify-content: space-between; font-size: 15px; color: #212121; margin-bottom: 15px; }
+        .price-row.discount-row { color: #388e3c; }
+        .total-row { border-top: 1px dashed #e0e0e0; padding-top: 15px; margin-top: 5px; font-size: 18px; font-weight: 700; display: flex; justify-content: space-between; }
+
+        .btn-place-order { width: 100%; background: #fb641b; color: #fff; border: none; padding: 16px; font-size: 16px; font-weight: 700; border-radius: 4px; cursor: pointer; transition: 0.3s; margin-top: 25px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-place-order:hover { background: #df5815; }
+        .btn-place-order:disabled { background: #c2c2c2; cursor: not-allowed; }
+
+        @media(max-width: 900px) {
+            .checkout-container { flex-direction: column-reverse; }
+            .right-col, .left-col { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">
+            <h2>Vizo<span>ra</span></h2>
+        </div>
+        <div class="secure-badge"><i class="fa-solid fa-lock"></i> 100% Secure Payment</div>
+    </header>
+
+    <div class="checkout-container">
+        
+        <div class="left-col">
+            
+            <div class="checkout-section">
+                <div class="section-header"><span>1</span> Delivery Address</div>
+                <div class="section-content">
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <input type="text" id="fullName" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Mobile Number</label>
+                            <input type="tel" id="mobile" placeholder="10-digit mobile number" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Pincode</label>
+                            <input type="text" id="pincode" placeholder="6 digits [0-9] PIN code" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Locality / Town</label>
+                            <input type="text" id="locality" placeholder="Area details" required>
+                        </div>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 20px;">
+                        <label>Address (Area and Street)</label>
+                        <textarea id="address" rows="3" placeholder="Flat, House no., Building, Company, Apartment" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>City / District</label>
+                            <input type="text" id="city" required>
+                        </div>
+                        <div class="input-group">
+                            <label>State</label>
+                            <input type="text" id="state" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkout-section">
+                <div class="section-header"><span>2</span> Payment Options</div>
+                <div class="section-content" style="padding: 15px;">
+                    
+                    <label class="payment-option">
+                        <div class="payment-header">
+                            <input type="radio" name="payment_method" value="UPI" onchange="togglePayment()">
+                            <i class="fa-brands fa-google-pay"></i> UPI (GPay, PhonePe, Paytm)
+                        </div>
+                        <div class="payment-body">
+                            <div class="input-group">
+                                <input type="text" placeholder="Enter your UPI ID (e.g. 9876543210@ybl)">
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="payment-option">
+                        <div class="payment-header">
+                            <input type="radio" name="payment_method" value="CARD" onchange="togglePayment()">
+                            <i class="fa-regular fa-credit-card"></i> Credit / Debit / ATM Card
+                        </div>
+                        <div class="payment-body">
+                            <div class="input-group" style="margin-bottom: 15px;">
+                                <input type="text" placeholder="Card Number (16 digits)">
+                            </div>
+                            <div class="form-row" style="margin-bottom: 0;">
+                                <div class="input-group"><input type="text" placeholder="Valid Thru (MM/YY)"></div>
+                                <div class="input-group"><input type="password" placeholder="CVV"></div>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="payment-option active">
+                        <div class="payment-header">
+                            <input type="radio" name="payment_method" value="COD" checked onchange="togglePayment()">
+                            <i class="fa-solid fa-money-bill-wave"></i> Cash on Delivery (COD)
+                        </div>
+                        <div class="payment-body" style="color: #388e3c; font-size: 14px; font-weight: 500;">
+                            Pay securely by cash or UPI when the product arrives at your doorstep.
+                        </div>
+                    </label>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="right-col">
+            <div class="summary-box">
+                <div class="summary-title">Order Summary</div>
+                
+                <div class="summary-product">
+                    <img id="sum-img" src="" alt="Product">
+                    <div class="summary-p-details">
+                        <h4 id="sum-name">Loading...</h4>
+                        <p id="sum-brand">Brand</p>
+                    </div>
+                </div>
+
+                <div class="summary-title" style="margin-top: 30px;">Price Details</div>
+                
+                <div class="price-row">
+                    <span>Price (1 item)</span>
+                    <span id="bill-mrp">₹0</span>
+                </div>
+                <div class="price-row discount-row">
+                    <span>Discount</span>
+                    <span id="bill-discount">- ₹0</span>
+                </div>
+                <div class="price-row">
+                    <span>Delivery Charges</span>
+                    <span style="color: #388e3c;">FREE</span>
+                </div>
+                
+                <div class="total-row">
+                    <span>Total Amount</span>
+                    <span id="bill-total">₹0</span>
+                </div>
+
+                <button class="btn-place-order" id="placeOrderBtn" onclick="placeOrder()">
+                    PLACE ORDER
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let finalPrice = 0;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Auto-fill name if logged in
+            const storedName = localStorage.getItem("userName");
+            if (storedName) {
+                document.getElementById("fullName").value = storedName;
+            } else {
+                alert("Please login to proceed with checkout.");
+                window.location.href = "login.html";
+            }
+
+            // Fetch Product ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('productId');
+
+            if (!productId) {
+                alert("Invalid request. Redirecting to home.");
+                window.location.href = "index.html";
+                return;
+            }
+
+            // Load Product Details for Summary
+            fetch(`ProductDetailsServlet?id=${productId}`)
+            .then(res => res.json())
+            .then(data => {
+                if(Object.keys(data).length === 0) {
+                    alert("Product details not found.");
+                    window.location.href = "index.html";
+                    return;
+                }
+
+                // Populate Summary UI
+                document.getElementById("sum-img").src = "images/" + data.thumbnail;
+                document.getElementById("sum-name").innerText = data.name;
+                document.getElementById("sum-brand").innerText = data.brand;
+
+                document.getElementById("bill-mrp").innerText = `₹${data.originalPrice > 0 ? data.originalPrice : data.sellingPrice}`;
+                
+                if (data.originalPrice > data.sellingPrice) {
+                    const discountAmt = data.originalPrice - data.sellingPrice;
+                    document.getElementById("bill-discount").innerText = `- ₹${discountAmt}`;
+                } else {
+                    document.getElementById("bill-discount").innerText = `- ₹0`;
+                }
+
+                finalPrice = data.sellingPrice;
+                document.getElementById("bill-total").innerText = `₹${finalPrice}`;
+            })
+            .catch(err => console.error(err));
+        });
+
+        // Payment Accordion UI Logic
+        function togglePayment() {
+            const options = document.querySelectorAll(".payment-option");
+            options.forEach(opt => opt.classList.remove("active"));
+
+            const checkedRadio = document.querySelector('input[name="payment_method"]:checked');
+            if (checkedRadio) {
+                checkedRadio.closest(".payment-option").classList.add("active");
+            }
+        }
+
+        // Place Order Logic
+        // Place Order Logic (Connected to Database)
+        function placeOrder() {
+            // Get user ID and product ID
+            const userId = localStorage.getItem("userId");
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('productId');
+
+            if (!userId) {
+                alert("Session expired. Please login again.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            // Get Form Values
+            const fullName = document.getElementById("fullName").value.trim();
+            const mobile = document.getElementById("mobile").value.trim();
+            const pincode = document.getElementById("pincode").value.trim();
+            const locality = document.getElementById("locality").value.trim();
+            const address = document.getElementById("address").value.trim();
+            const city = document.getElementById("city").value.trim();
+            const state = document.getElementById("state").value.trim();
+            
+            // Basic Form Validation
+            if(!fullName || !mobile || !pincode || !locality || !address || !city || !state) {
+                alert("Please fill in all the required delivery address fields.");
+                return;
+            }
+
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
+            // Change button to processing state
+            const btn = document.getElementById("placeOrderBtn");
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> PROCESSING...';
+            btn.disabled = true;
+
+            // Prepare data to send to Servlet
+            const params = new URLSearchParams();
+            params.append("userId", userId);
+            params.append("productId", productId);
+            params.append("fullName", fullName);
+            params.append("mobile", mobile);
+            params.append("pincode", pincode);
+            params.append("locality", locality);
+            params.append("address", address);
+            params.append("city", city);
+            params.append("state", state);
+            params.append("paymentMethod", paymentMethod);
+
+            // Send to Java Backend
+            fetch("OrderServlet", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: params.toString()
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data.trim() === "success") {
+                    alert(`🎉 Order Placed Successfully!\n\nPayment Mode: ${paymentMethod}\n\nThank you for shopping with Vizora!`);
+                    window.location.href = "orders.html"; // Redirect to the user's order history page
+                } else {
+                    alert("Failed to place order. " + data);
+                    btn.innerHTML = 'PLACE ORDER';
+                    btn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred while placing the order.");
+                btn.innerHTML = 'PLACE ORDER';
+                btn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vizora | Product Details</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; margin: 0; color: #212121; background: #fff; }
+
+        /* Professional Header */
+         header { position: sticky; top: 0; z-index: 1000; background: #ffffff; height: 75px; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo { cursor: pointer; }
+        .logo h2 { font-size: 26px; color: #2874f0; font-weight: 700; font-style: italic; margin: 0; }
+        .logo span { color: #ff9f00; }
+        .logo small { color: #878787; font-size: 11px; font-weight: 500; }
+
+        nav { display: flex; align-items: center; gap: 20px; }
+        .dropdown { position: relative; }
+        .dropbtn { background: none; border: none; cursor: pointer; font-weight: 500; font-size: 16px; display: flex; align-items: center; gap: 6px; color: #333; padding: 10px; }
+        .dropdown-content { display: none; position: absolute; top: 100%; right: 0; width: 200px; background: #fff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 999; padding: 10px 0; }
+        .dropdown:hover .dropdown-content { display: block; }
+        .dropdown-content a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; font-size: 14px; color: #333; text-decoration: none; transition: 0.3s; }
+        .dropdown-content a:hover { background: #f5faff; color: #2874f0; padding-left: 25px; }
+
+        /* Product Container */
+        .product-container { display: flex; max-width: 1100px; margin: 50px auto; padding: 0 20px; gap: 60px; }
+        .left-wrapper { flex: 1; }
+        .main-img { width: 100%; border-radius: 8px; object-fit: contain; }
+        .thumbnail-list { display: flex; gap: 10px; margin-top: 20px; }
+        .thumbnail-list img { width: 80px; height: 80px; object-fit: contain; border: 1px solid #eee; cursor: pointer; border-radius: 4px; }
+        
+        .product-info { flex: 1; }
+        .category-tag { font-size: 12px; color: #878787; letter-spacing: 1px; }
+        .product-title { font-size: 26px; font-weight: 700; margin: 10px 0; }
+        .price-section { display: flex; align-items: baseline; gap: 12px; margin-bottom: 25px; }
+        .current-price { font-size: 28px; font-weight: 700; }
+        .mrp { font-size: 18px; color: #878787; text-decoration: line-through; }
+        .save-tag { background: #ffebee; color: #d32f2f; padding: 3px 8px; font-size: 13px; font-weight: 600; }
+
+        .action-buttons { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+        .btn { padding: 18px; border: none; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-add { background: #000; color: #fff; } 
+        .btn-buy { background: #2874f0; color: #fff; } 
+        .btn:hover { opacity: 0.9; }
+
+        details { border-top: 1px solid #eee; padding: 15px 0; }
+        summary { font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .details-list { list-style: none; padding: 0; margin: 10px 0; }
+        .details-list li { margin-bottom: 8px; position: relative; padding-left: 20px; color: #555; }
+        .details-list li::before { content: "•"; color: #2874f0; font-weight: bold; position: absolute; left: 0; }
+
+        /* Lightbox Styles */
+        .lightbox {
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.9); 
+            z-index: 9999; 
+            justify-content: center; 
+            align-items: center;
+        }
+        .lightbox img {
+            max-width: 90%; 
+            max-height: 90%; 
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .close-icon {
+            position: absolute; 
+            top: 20px; right: 40px; 
+            color: #fff; font-size: 50px; 
+            cursor: pointer;
+        }
+        /* Ensure main image shows it is clickable */
+        #main-image { cursor: zoom-in; }
+
+       .trust-badges {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+            margin-top: 20px;
+        }
+        .badge-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px; /* Small, readable font */
+            color: #777;     /* Lighter grey for professional subtlety */
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-item i {
+            font-size: 16px; /* Smaller icons to match text */
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">
+            <h2>Vizo<span>ra</span></h2>
+            <small>See Beyond Style</small>
+        </div>
+
+        <nav>
+            <div class="dropdown">
+                <button class="dropbtn">
+                    <i class="fa-solid fa-circle-user" style="font-size: 20px;"></i>
+                    <span id="username">Account</span>
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+                    <a href="#"><i class="fa-regular fa-user"></i> My Profile</a>
+                    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> My Cart</a>
+                    <a href="orders.html"><i class="fa-solid fa-box"></i> My Orders</a>
+                    <hr style="margin: 5px 0; border: none; border-top: 1px solid #f0f0f0;">
+                    <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="product-container">
+        <div class="left-wrapper">
+            <!-- Add onclick="openLightbox()" here -->
+            <img id="main-image" class="main-img" src="" alt="Product" onclick="openLightbox()">
+            <div class="thumbnail-list" id="thumb-gallery"></div>
+        </div>
+
+        <div class="product-info">
+            <div class="category-tag" id="category-tag">CATEGORY</div>
+            <h1 class="product-title" id="product-name">Loading...</h1>
+            <div class="price-section">
+                <span class="current-price" id="selling-price">₹0</span>
+                <span class="mrp" id="original-price">₹0</span>
+                <span class="save-tag" id="discount-text">Save ₹0</span>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-add" id="btn-add-cart">ADD TO CART</button>
+                <button class="btn btn-buy" id="btn-buy-now">BUY NOW</button>
+            </div>
+
+            <!-- Trust Badges Section -->
+            <div class="trust-badges">
+                <div class="badge-item">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Secure</span>
+                </div>
+                <div class="badge-item">
+                    <i class="fa-solid fa-credit-card"></i>
+                    <span>No EMI</span>
+                </div>
+                <div class="badge-item">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span>Easy Exchange</span>
+                </div>
+            </div>
+
+            <details>
+                <summary>PRODUCT DETAILS <i class="fa-solid fa-chevron-down"></i></summary>
+                <ul class="details-list">
+                    <li id="product-desc"></li>
+                    <li><strong>Material:</strong> Premium quality acetate and metal alloy.</li>
+                    <li><strong>Protection:</strong> 100% UV400 protection against harmful rays.</li>
+                    <li><strong>Durability:</strong> Scratch-resistant lens coating.</li>
+                </ul>
+            </details>
+            <details>
+                <summary>RETURN POLICY <i class="fa-solid fa-chevron-down"></i></summary>
+                <ul class="details-list">
+                    <li>14-day hassle-free return window.</li>
+                    <li>Refunds processed within 5-7 business days.</li>
+                    <li>Free doorstep pickup for returns.</li>
+                </ul>
+            </details>
+        </div>
+    </div>
+
+    <!-- Lightbox Overlay -->
+   <!-- Lightbox Overlay -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+        <span class="close-icon" onclick="closeLightbox(event)">&times;</span>
+        <img id="lightbox-img" src="" alt="Full View">
+    </div>
+
+    <script>
+        document.getElementById("username").innerText = localStorage.getItem("userName") || "Account";
+
+        const id = new URLSearchParams(window.location.search).get('id');
+        fetch(`ProductDetailsServlet?id=${id}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("product-name").innerText = data.name;
+            document.getElementById("category-tag").innerText = data.category.toUpperCase();
+            document.getElementById("main-image").src = "images/" + data.thumbnail;
+            document.getElementById("selling-price").innerText = "₹" + data.sellingPrice;
+            document.getElementById("original-price").innerText = "₹" + data.originalPrice;
+            document.getElementById("product-desc").innerText = data.description;
+            
+            const savings = data.originalPrice - data.sellingPrice;
+            document.getElementById("discount-text").innerText = "Save ₹" + savings;
+
+            document.getElementById("btn-add-cart").onclick = () => addToCart(data.id);
+            document.getElementById("btn-buy-now").onclick = () => window.location.href = "checkout.html?productId=" + data.id;
+
+            const thumbs = [data.thumbnail, data.image1, data.image2, data.image3];
+            let thumbHtml = "";
+            thumbs.forEach(img => { if(img) thumbHtml += `<img src="images/${img}" onclick="document.getElementById('main-image').src=this.src">`; });
+            document.getElementById("thumb-gallery").innerHTML = thumbHtml;
+        });
+
+        function addToCart(pid) {
+            const userId = localStorage.getItem("userId");
+            if (!userId) { window.location.href = "login.html"; return; }
+            fetch("CartServlet", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: `userId=${userId}&productId=${pid}` })
+            .then(() => alert("Added to Cart!"));
+        }
+        function logout() { localStorage.clear(); window.location.href = "index.html"; }
+
+        // 2. Add these functions to your <script>
+        function openLightbox(event) {
+            // Prevent the click from triggering anything else
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const mainImg = document.getElementById('main-image');
+            
+            lightboxImg.src = mainImg.src; 
+            lightbox.style.display = 'flex'; 
+        }
+
+       function closeLightbox(event) {
+            // This closes the lightbox if the user clicks the background OR the X icon
+            // It prevents closing if the user accidentally clicks on the image itself
+            if (event.target.id === 'lightbox' || event.target.className === 'close-icon') {
+                document.getElementById('lightbox').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

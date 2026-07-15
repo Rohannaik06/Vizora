@@ -1,0 +1,1032 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f1f3f6;
+    color:#333;
+}
+
+/* ===========================
+   HEADER
+=========================== */
+
+header {
+    width: 100%;
+    height: 70px;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* ===========================
+   LOGO
+=========================== */
+
+.logo{
+    display:flex;
+    flex-direction:column;
+    cursor:pointer;
+    user-select:none;
+}
+
+.logo h2 {
+    font-size: 26px;
+    color: #2874f0;
+    font-weight: 700;
+    font-style: italic;
+}
+.logo span { color: #ff9f00; }
+.logo small { color: #878787; font-size: 11px; font-weight: 500; }
+
+/* ===========================
+   SEARCH BAR
+=========================== */
+
+.search-box {
+    width: 45%;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    background: #f0f5ff; /* Subtle light blue background */
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    padding: 0 15px;
+    transition: 0.3s;
+}
+.search-box:focus-within {
+    background: #ffffff;
+    border-color: #2874f0;
+    box-shadow: 0 0 5px rgba(40,116,240,0.2);
+}
+.search-box input {
+    width: 100%;
+    margin-left: 10px;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+}
+
+.search-box:hover{
+    border-color:#0d62e6;
+}
+
+.search-box i{
+    color:#2874f0;
+    font-size:17px;
+}
+
+.search-box input::placeholder{
+    color:#999;
+}
+
+/* ===========================
+   NAVBAR
+=========================== */
+
+nav{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+/* ===========================
+   NOTIFICATION BUTTON
+=========================== */
+
+.notify-btn{
+    width:45px;
+    height:45px;
+    border:none;
+    background:#fff;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:18px;
+    transition:.3s;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.notify-btn:hover{
+    background:#2874f0;
+    color:white;
+    transform:translateY(-2px);
+}
+
+/* ===========================
+   CART BUTTON
+=========================== */
+
+.cart-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border:none;
+    background:#2874f0;
+    color:#fff;
+    cursor:pointer;
+    border-radius:8px;
+    padding:11px 18px;
+    font-size:15px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.cart-btn:hover{
+    background:#0d62e6;
+    transform:translateY(-2px);
+}
+
+/* ===========================
+   LOGIN BUTTON
+=========================== */
+
+.login-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border:none;
+    background:#2874f0;
+    color:#fff;
+    cursor:pointer;
+    border-radius:8px;
+    padding:11px 20px;
+    font-size:15px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.login-btn:hover{
+    background:#0d62e6;
+    transform:translateY(-2px);
+}
+
+/* ===========================
+   BEFORE LOGIN
+=========================== */
+
+#beforeLogin{
+    display:flex;
+    align-items:center;
+}
+
+/* ===========================
+   AFTER LOGIN
+=========================== */
+
+#afterLogin{
+    display:none;
+    align-items:center;
+}
+
+/* ===========================
+   PROFILE DROPDOWN
+=========================== */
+
+.profile-dropdown{
+    position:relative;
+}
+
+.profile-btn{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border:none;
+    background:#fff;
+    padding:10px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.profile-btn:hover{
+    background:#eef4ff;
+}
+
+.profile-btn i:first-child{
+    font-size:24px;
+    color:#2874f0;
+}
+
+.profile-btn i:last-child{
+    font-size:13px;
+    color:#666;
+}
+
+/* ===========================
+   PROFILE MENU
+=========================== */
+
+.profile-menu{
+    position:absolute;
+    top:58px;
+    right:0;
+    width:250px;
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 15px 40px rgba(0,0,0,.15);
+
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(15px);
+
+    transition:.25s;
+    z-index:999;
+}
+
+.profile-dropdown:hover .profile-menu{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+}
+
+/* ===========================
+   PROFILE LINKS
+=========================== */
+
+.profile-menu a{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:15px 18px;
+    color:#333;
+    text-decoration:none;
+    font-size:15px;
+    transition:.25s;
+}
+
+.profile-menu a:hover{
+    background:#f4f8ff;
+    color:#2874f0;
+    padding-left:24px;
+}
+
+.profile-menu i{
+    width:18px;
+    text-align:center;
+}
+
+.profile-menu hr{
+    border:none;
+    border-top:1px solid #eee;
+}
+
+/* ===========================
+   COMMON BUTTON EFFECT
+=========================== */
+
+button{
+    font-family:'Poppins',sans-serif;
+}
+
+button:active{
+    transform:scale(.97);
+}
+
+/* ==========================================================
+   PART 2B : BANNER + SLIDER + FILTER BAR + RESPONSIVE
+========================================================== */
+
+/* ===========================
+   BANNER
+=========================== */
+
+.banner{
+    width:100%;
+    margin:18px auto;
+    padding:0 20px;
+}
+
+.slider{
+    position:relative;
+    width:100%;
+    height:340px;
+    overflow:hidden;
+    border-radius:14px;
+    background:#fff;
+    box-shadow:0 6px 20px rgba(0,0,0,.08);
+}
+
+.slide{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity .8s ease-in-out;
+}
+
+.slide.active{
+    opacity:1;
+}
+
+/* ===========================
+   FILTER BAR
+=========================== */
+.filter-bar {
+    position: sticky;
+    top: 70px;
+    z-index: 998;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 12px 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.filter-bar button {
+    border: none;
+    background: transparent;
+    color: #333;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+.filter-bar button:hover {
+    color: #2874f0;
+}
+.filter-bar button.active {
+    background: #eef5ff;
+    color: #2874f0;
+    font-weight: 600;
+}
+
+.filter-bar::-webkit-scrollbar{
+    display:none;
+}
+
+
+/* ===========================
+   SECTION TITLE
+=========================== */
+
+.section-title{
+    font-size:24px;
+    font-weight:600;
+    margin:25px 20px 15px;
+    color:#222;
+}
+
+/* ===========================
+   PAGE SPACING
+=========================== */
+
+main{
+    padding-bottom:40px;
+}
+
+/* ==========================================================
+   RESPONSIVE DESIGN
+========================================================== */
+
+/* ---------- Tablet ---------- */
+
+@media (max-width:992px){
+
+    header{
+        padding:15px 25px;
+        height:auto;
+        flex-wrap:wrap;
+        gap:15px;
+    }
+
+    .logo{
+        width:100%;
+        align-items:center;
+    }
+
+    .search-box{
+        width:100%;
+        order:3;
+    }
+
+    nav{
+        margin-left:auto;
+    }
+
+    .slider{
+        height:260px;
+    }
+
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width:768px){
+
+    header{
+        padding:15px;
+    }
+
+    .logo h2{
+        font-size:26px;
+    }
+
+    .search-box{
+        width:100%;
+        height:44px;
+    }
+
+    .search-box input{
+        font-size:14px;
+    }
+
+    nav{
+        gap:10px;
+    }
+
+    .cart-btn,
+    .login-btn{
+        padding:10px 14px;
+        font-size:14px;
+    }
+
+    .profile-btn{
+        padding:8px 12px;
+        font-size:14px;
+    }
+
+    .profile-menu{
+        width:220px;
+    }
+
+    .slider{
+        height:190px;
+        border-radius:10px;
+    }
+
+    .banner{
+        padding:0 10px;
+        margin:12px auto;
+    }
+
+    .filter-bar{
+        padding:12px 10px;
+        gap:8px;
+    }
+
+    .filter-bar button{
+        padding:8px 15px;
+        font-size:13px;
+    }
+
+}
+
+/* ---------- Small Mobile ---------- */
+
+@media (max-width:480px){
+
+    header{
+        gap:12px;
+    }
+
+    .logo h2{
+        font-size:22px;
+    }
+
+    .logo small{
+        font-size:10px;
+    }
+
+    .search-box{
+        height:42px;
+    }
+
+    .notify-btn{
+        width:36px;
+        height:36px;
+    }
+
+    .cart-btn span,
+    .login-btn span{
+        display:none;
+    }
+
+    .cart-btn,
+    .login-btn{
+        padding:10px;
+    }
+
+    .profile-btn span{
+        display:none;
+    }
+
+    .profile-btn{
+        padding:8px 10px;
+    }
+
+    .slider{
+        height:160px;
+    }
+
+    .filter-bar button{
+        padding:8px 14px;
+        font-size:12px;
+    }
+
+}
+
+/* ==========================================================
+   PART 2C : PRODUCT GRID + PRODUCT CARD + BUTTONS
+========================================================== */
+
+/* ===========================
+   PRODUCT GRID
+=========================== */
+
+.product-grid{
+    width:100%;
+    padding:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:25px;
+}
+
+/* ===========================
+   PRODUCT CARD
+=========================== */
+
+.product-card{
+    background:#fff;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    transition:.3s;
+    cursor:pointer;
+}
+
+.product-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 12px 28px rgba(0,0,0,.15);
+}
+
+/* ===========================
+   PRODUCT IMAGE
+=========================== */
+
+.product-card img{
+    width:100%;
+    height:230px;
+    object-fit:contain;
+    background:#fafafa;
+    padding:15px;
+    transition:.3s;
+}
+
+.product-card:hover img{
+    transform:scale(1.05);
+}
+
+/* ===========================
+   PRODUCT DETAILS
+=========================== */
+
+.product-card h3{
+    font-size:18px;
+    font-weight:600;
+    color:#222;
+    margin:15px 15px 8px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.brand{
+    margin:0 15px;
+    color:#777;
+    font-size:14px;
+}
+
+.price{
+    margin:12px 15px;
+    font-size:18px;
+    color:#222;
+}
+
+.price strong{
+    color:#2874f0;
+    font-size:20px;
+}
+
+.price strike{
+    color:#888;
+    margin-left:10px;
+    font-size:15px;
+}
+
+/* ===========================
+   BUTTON GROUP
+=========================== */
+
+.button-group{
+    display:flex;
+    gap:10px;
+    padding:15px;
+}
+
+/* ===========================
+   ADD TO CART
+=========================== */
+
+.btn-add{
+    flex:1;
+    padding:11px;
+    border:none;
+    border-radius:8px;
+    background:#ff9800;
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.btn-add:hover{
+    background:#f57c00;
+}
+
+/* ===========================
+   BUY NOW
+=========================== */
+
+.btn-buy{
+    flex:1;
+    padding:11px;
+    border:none;
+    border-radius:8px;
+    background:#2874f0;
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.btn-buy:hover{
+    background:#0d62e6;
+}
+
+/* ===========================
+   BUTTON CLICK
+=========================== */
+
+.btn-add:active,
+.btn-buy:active{
+    transform:scale(.97);
+}
+
+/* ===========================
+   LOADING / EMPTY STATE
+=========================== */
+
+.loading,
+.no-products{
+    width:100%;
+    text-align:center;
+    padding:60px 20px;
+    font-size:20px;
+    color:#666;
+    font-weight:500;
+}
+
+/* ===========================
+   SCROLLBAR
+=========================== */
+
+::-webkit-scrollbar{
+    width:8px;
+}
+
+::-webkit-scrollbar-track{
+    background:#f1f3f6;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#2874f0;
+    border-radius:20px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background:#0d62e6;
+}
+
+/* ===========================
+   SELECTION
+=========================== */
+
+::selection{
+    background:#2874f0;
+    color:#fff;
+}
+
+/* ===========================
+   FADE ANIMATION
+=========================== */
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.product-card{
+    animation:fadeIn .5s ease;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:992px){
+
+    .product-grid{
+        grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    }
+
+    .product-card img{
+        height:210px;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .product-grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:18px;
+        padding:15px;
+    }
+
+    .product-card img{
+        height:180px;
+    }
+
+    .product-card h3{
+        font-size:16px;
+    }
+
+    .price strong{
+        font-size:18px;
+    }
+
+    .button-group{
+        flex-direction:column;
+    }
+
+}
+
+@media(max-width:480px){
+
+    .product-grid{
+        grid-template-columns:1fr;
+    }
+
+    .product-card img{
+        height:220px;
+    }
+
+}
+
+
+
+/* ==================================================
+   9. FOOTER (Professional & Modern)
+================================================== */
+.professional-footer {
+    background-color: #172337; /* Premium Dark Blue (Similar to Flipkart) */
+    color: #ffffff;
+    padding: 60px 0 0 0;
+    margin-top: 50px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.footer-container {
+    width: 96%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr; /* Creates perfect column widths */
+    gap: 40px;
+    padding-bottom: 50px;
+}
+
+/* Column 1: Logo and About */
+.footer-col .footer-logo h2 {
+    font-size: 28px;
+    font-style: italic;
+    margin-bottom: 15px;
+    color: #2874f0;
+}
+.footer-col .footer-logo span {
+    color: #ff9f00;
+}
+.footer-col p {
+    font-size: 14px;
+    color: #878787;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Social Media Icons */
+.social-links a {
+    display: inline-block;
+    height: 36px;
+    width: 36px;
+    background-color: #ffffff1a; /* Transparent White */
+    margin-right: 10px;
+    text-align: center;
+    line-height: 36px;
+    border-radius: 50%;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+.social-links a:hover {
+    background-color: #2874f0;
+    transform: translateY(-3px);
+}
+
+/* Footer Headings */
+.footer-col h3 {
+    font-size: 18px;
+    margin-bottom: 25px;
+    font-weight: 500;
+    position: relative;
+    color: #ffffff;
+}
+.footer-col h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    background-color: #2874f0;
+    height: 2px;
+    width: 40px; /* Small blue accent line under headings */
+}
+
+/* Links */
+.footer-col ul {
+    list-style: none;
+}
+.footer-col ul li:not(:last-child) {
+    margin-bottom: 15px;
+}
+.footer-col ul li a {
+    font-size: 14px;
+    color: #878787;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.footer-col ul li a:hover {
+    color: #ffffff;
+    padding-left: 6px; /* Cool hover effect moving text slightly right */
+}
+
+/* Newsletter Input */
+.subscribe-box {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+.subscribe-box input {
+    width: 100%;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+    font-size: 14px;
+    background: #ffffff;
+}
+.subscribe-box button {
+    padding: 12px 18px;
+    background-color: #ff9f00;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+.subscribe-box button:hover {
+    background-color: #e68f00;
+}
+
+/* Bottom Bar (Copyright & Payments) */
+.footer-bottom {
+    background-color: #0b1423; /* Darker shade for the very bottom */
+    padding: 20px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.footer-bottom p {
+    font-size: 13px;
+    color: #878787;
+    margin: 0;
+}
+.payment-icons i {
+    font-size: 24px;
+    color: #878787;
+    margin-left: 12px;
+    transition: 0.3s;
+}
+.payment-icons i:hover {
+    color: #ffffff;
+}
+
+/* ==================================================
+   RESPONSIVE FOOTER
+================================================== */
+@media(max-width: 1024px){
+    .footer-container {
+        grid-template-columns: repeat(2, 1fr); /* Switch to 2 columns on tablets */
+    }
+}
+@media(max-width: 768px){
+    .footer-container {
+        grid-template-columns: 1fr; /* Switch to 1 column on mobile */
+        gap: 30px;
+    }
+    .footer-bottom {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    .payment-icons i {
+        margin: 0 6px;
+    }
+}
+
+
+/* ================= IMAGE CONTAINER & WISHLIST HEART ================= */
+.img-container {
+    position: relative; /* हे सर्वात महत्त्वाचे आहे! याशिवाय हार्ट फोटोवर बसणार नाही */
+    width: 100%;
+    height: 230px;
+    background: #fafafa;
+    overflow: hidden;
+}
+
+.img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 20px;
+    transition: 0.35s;
+}
+
+/* फोटोवर उजव्या बाजूला हार्ट आयकॉन */
+.wishlist {
+    position: absolute;
+    top: 12px;
+    right: 12px; /* बरोबर उजव्या बाजूला वर सेट करेल */
+    width: 36px;
+    height: 36px;
+    background: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 5;
+}
+
+.wishlist i {
+    color: #777;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.wishlist:hover {
+    background: #ffebee;
+    transform: scale(1.1);
+}
+
+.wishlist.active i {
+    color: #e53935; /* क्लिक केल्यावर लाल रंग होईल */
+}
