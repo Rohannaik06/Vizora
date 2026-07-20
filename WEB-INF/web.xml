@@ -7,14 +7,144 @@
 
     <display-name>VIZORA</display-name>
 
+    <!-- Product Servlet -->
     <servlet>
         <servlet-name>ProductServlet</servlet-name>
         <servlet-class>ProductServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>ProductServlet</servlet-name>
         <url-pattern>/ProductServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Cart Servlet -->
+    <servlet>
+        <servlet-name>CartServlet</servlet-name>
+        <servlet-class>CartServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CartServlet</servlet-name>
+        <url-pattern>/CartServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- View Cart Servlet -->
+    <servlet>
+        <servlet-name>ViewCartServlet</servlet-name>
+        <servlet-class>ViewCartServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewCartServlet</servlet-name>
+        <url-pattern>/ViewCartServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Wishlist Servlet -->
+    <servlet>
+        <servlet-name>WishlistServlet</servlet-name>
+        <servlet-class>WishlistServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WishlistServlet</servlet-name>
+        <url-pattern>/WishlistServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Login Servlet -->
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/LoginServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Signup Servlet -->
+    <servlet>
+        <servlet-name>SignupServlet</servlet-name>
+        <servlet-class>SignupServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SignupServlet</servlet-name>
+        <url-pattern>/SignupServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Forgot Password Servlet -->
+    <servlet>
+        <servlet-name>ForgotPasswordServlet</servlet-name>
+        <servlet-class>ForgotPasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ForgotPasswordServlet</servlet-name>
+        <url-pattern>/ForgotPasswordServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Order Servlet -->
+    <servlet>
+        <servlet-name>OrderServlet</servlet-name>
+        <servlet-class>OrderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OrderServlet</servlet-name>
+        <url-pattern>/OrderServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Order History Servlet -->
+    <servlet>
+        <servlet-name>OrderHistoryServlet</servlet-name>
+        <servlet-class>OrderHistoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OrderHistoryServlet</servlet-name>
+        <url-pattern>/OrderHistoryServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Cancel Order Servlet -->
+    <servlet>
+        <servlet-name>CancelOrderServlet</servlet-name>
+        <servlet-class>CancelOrderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CancelOrderServlet</servlet-name>
+        <url-pattern>/CancelOrderServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Cart Action Servlet -->
+    <servlet>
+        <servlet-name>CartActionServlet</servlet-name>
+        <servlet-class>CartActionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CartActionServlet</servlet-name>
+        <url-pattern>/CartActionServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Product Details Servlet -->
+    <servlet>
+        <servlet-name>ProductDetailsServlet</servlet-name>
+        <servlet-class>ProductDetailsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProductDetailsServlet</servlet-name>
+        <url-pattern>/ProductDetailsServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- User Profile Servlet -->
+    <servlet>
+        <servlet-name>UserProfileServlet</servlet-name>
+        <servlet-class>UserProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserProfileServlet</servlet-name>
+        <url-pattern>/UserProfileServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- View Wishlist Servlet -->
+    <servlet>
+        <servlet-name>ViewWishlistServlet</servlet-name>
+        <servlet-class>ViewWishlistServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewWishlistServlet</servlet-name>
+        <url-pattern>/ViewWishlistServlet</url-pattern>
     </servlet-mapping>
 
 </web-app>

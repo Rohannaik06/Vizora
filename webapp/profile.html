@@ -206,7 +206,7 @@
 
         // ================= FETCH DATA FROM DATABASE =================
         function loadUserProfileData(userId) {
-            fetch(`UserProfileServlet?userId=${userId}`)
+            fetch(`/VIZORA/UserProfileServlet?userId=${userId}`)
             .then(response => response.json())
             .then(data => {
                 // Populate inputs with database values
@@ -261,7 +261,7 @@
             params.append("gender", gender);
 
             // Call Servlet via POST
-            fetch("UserProfileServlet", {
+            fetch("/VIZORA/UserProfileServlet", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: params.toString()

@@ -96,9 +96,9 @@
                 </button>
                 <div class="dropdown-content">
                     <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
-                    <a href="#"><i class="fa-regular fa-user"></i> My Profile</a>
+                    <a href="profile.html"><i class="fa-regular fa-user"></i> My Profile</a>
                     <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> My Cart</a>
-                    <a href="#"><i class="fa-solid fa-box"></i>My Orders </a>
+                    <a href="orders.html"><i class="fa-solid fa-box"></i>My Orders </a>
                     <hr style="margin: 5px 0; border: none; border-top: 1px solid #f0f0f0;">
                     <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                 </div>
@@ -130,7 +130,7 @@
         });
 
         function loadWishlist(userId) {
-            fetch(`ViewWishlistServlet?userId=${userId}`)
+            fetch(`/VIZORA/ViewWishlistServlet?userId=${userId}`)
             .then(response => response.json())
             .then(items => {
                 const container = document.getElementById("wishlist-content");
@@ -185,7 +185,7 @@
         function removeFromWishlist(productId) {
             const userId = localStorage.getItem("userId");
             
-            fetch("WishlistServlet", {
+            fetch("/VIZORA/WishlistServlet", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: `userId=${userId}&productId=${productId}`
@@ -204,7 +204,7 @@
         function moveToCart(productId) {
             const userId = localStorage.getItem("userId");
             
-            fetch("CartServlet", {
+            fetch("/VIZORA/CartServlet", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: `userId=${userId}&productId=${productId}`

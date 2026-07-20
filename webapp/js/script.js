@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     checkLoginState();
     fetchProducts();
     setInterval(changeSlide, 3000);
-    loadCartCount();
+    updateCartCount();
 });
 
 // ================= LOGIN / LOGOUT =================
@@ -42,7 +42,7 @@ function changeSlide() {
 
 // ================= FETCH PRODUCTS =================
 function fetchProducts() {
-    fetch("ProductServlet")
+    fetch("/VIZORA/ProductServlet")
     .then(response => response.json())
     .then(products => {
         const grid = document.getElementById("product-grid");
@@ -189,7 +189,7 @@ function addToCart(productId) {
         return;
     }
 
-    fetch("CartServlet", {
+    fetch("/VIZORA/CartServlet", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: "userId=" + userId + "&productId=" + productId
@@ -219,7 +219,7 @@ function updateCartCount() {
     if (!userId) return;
 
     // ViewCartServlet वरून डेटा फेच करा
-    fetch(`ViewCartServlet?userId=${userId}`)
+    fetch(`/VIZORA/ViewCartServlet?userId=${userId}`)
     .then(response => response.json())
     .then(cartItems => {
         const cartBtn = document.querySelector(".cart-btn");
@@ -258,7 +258,7 @@ function toggleWishlist(productId, element) {
     // इव्हेंट बबलिंग थांबवण्यासाठी (जेणेकरून कार्डवर क्लिक केल्यासारखे वाटणार नाही)
     event.stopPropagation();
 
-    fetch("WishlistServlet", {
+    fetch("/VIZORA/WishlistServlet", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: `userId=${userId}&productId=${productId}`

@@ -197,7 +197,7 @@
         document.getElementById("username").innerText = localStorage.getItem("userName") || "Account";
 
         const id = new URLSearchParams(window.location.search).get('id');
-        fetch(`ProductDetailsServlet?id=${id}`)
+        fetch(`/VIZORA/ProductDetailsServlet?id=${id}`)
         .then(res => res.json())
         .then(data => {
             document.getElementById("product-name").innerText = data.name;
