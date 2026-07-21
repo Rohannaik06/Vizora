@@ -63,7 +63,6 @@
         .auth-footer { text-align: center; margin-top: 20px; font-size: 14px; }
         .auth-footer a { color: #2874f0; text-decoration: none; font-weight: 600; }
 
-
         .forgot-password{
             text-align:right;
             margin:-8px 0 20px;
@@ -90,7 +89,8 @@
         <p>Log in to continue shopping</p>
     </div>
 
-    <form action="LoginServlet" method="POST" id="loginForm">
+    <!-- UPDATED ACTION PATH HERE -->
+    <form action="/VIZORA/LoginServlet" method="POST" id="loginForm">
         <div class="input-group">
             <i class="fa-solid fa-envelope"></i>
             <input
@@ -124,17 +124,13 @@
 </body>
 <script>
 document.getElementById("loginForm").onsubmit = function(e){
-
     const email = document.getElementById("email").value.trim();
-
-    const emailPattern =
-    /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
     if(!emailPattern.test(email)){
         alert("Please enter a valid email address.");
         e.preventDefault();
     }
-
 };
 </script>
 </html>

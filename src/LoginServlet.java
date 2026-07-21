@@ -28,8 +28,7 @@ public class LoginServlet extends HttpServlet {
 
             Connection con = DBConnection.getConnection();
 
-            String sql =
-            "SELECT * FROM users WHERE email=? AND password=?";
+            String sql = "SELECT * FROM users WHERE email=? AND password=?";
 
             PreparedStatement ps = con.prepareStatement(sql);
 
@@ -45,26 +44,19 @@ public class LoginServlet extends HttpServlet {
                 String userName = rs.getString("full_name");
 
                 out.println("<script>");
-
                 out.println("localStorage.setItem('isLoggedIn','true');");
-
                 out.println("localStorage.setItem('userId','"+userId+"');");
-
                 out.println("localStorage.setItem('userName','"+userName+"');");
-
-                out.println("window.location='index.html';");
-
+                // FIXED PATH BELOW:
+                out.println("window.location='/VIZORA/index.html';");
                 out.println("</script>");
 
             }
             else{
 
                 out.println("<script>");
-
                 out.println("alert('Invalid Email or Password');");
-
-                out.println("window.location='login.html';");
-
+                out.println("window.location='/VIZORA/webapp/login.html';");
                 out.println("</script>");
 
             }
