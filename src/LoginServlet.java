@@ -48,7 +48,7 @@ public class LoginServlet extends HttpServlet {
                 out.println("localStorage.setItem('userId','"+userId+"');");
                 out.println("localStorage.setItem('userName','"+userName+"');");
                 // FIXED PATH BELOW:
-                out.println("window.location='/VIZORA/index.html';");
+                out.println("window.location='/VIZORA/webapp/index.html';");
                 out.println("</script>");
 
             }
