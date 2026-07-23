@@ -38,7 +38,7 @@ public class SignupServlet extends HttpServlet {
             con.close();
 
             if (row > 0) {
-                response.sendRedirect("login.html");
+                response.sendRedirect("/VIZORA/webapp/login.html");
             } else {
                 response.getWriter().println("Signup Failed!");
             }

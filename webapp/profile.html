@@ -6,11 +6,8 @@
     <title>My Profile | Vizora</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <link rel="stylesheet" href="style.css">
-
     <style>
         /* ================= GLOBAL & HEADER CSS ================= */
         body { background: #f1f3f6; font-family: 'Inter', sans-serif; margin: 0; padding: 0; color: #212121; }
@@ -22,12 +19,9 @@
         .logo small { color: #878787; font-size: 11px; font-weight: 500; }
 
         nav { display: flex; align-items: center; gap: 20px; }
-        .cart-btn { background: #0d62e6; color: #fff; border: none; padding: 10px 24px; border-radius: 5px; cursor: pointer; font-weight: 500; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
-        .cart-btn:hover { background: #0b50bc; }
-
         .dropdown { position: relative; }
         .dropbtn { background: none; border: none; cursor: pointer; font-weight: 500; font-size: 16px; display: flex; align-items: center; gap: 6px; color: #333; padding: 10px; }
-        .dropbtn i { font-size: 16px;}       /* Fixed Icon Size */
+        .dropbtn i { font-size: 16px;}
         .dropdown-content { display: none; position: absolute; top: 100%; right: 0; width: 200px; background: #fff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 999; padding: 10px 0; }
         .dropdown:hover .dropdown-content { display: block; }
         .dropdown-content a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; font-size: 14px; color: #333; text-decoration: none; transition: 0.3s; }
@@ -57,13 +51,14 @@
         .content-header h2 { font-size: 20px; font-weight: 600; margin: 0; }
         .edit-btn { background: none; border: none; color: #2874f0; font-size: 15px; font-weight: 600; cursor: pointer; }
         
-        /* Form Styles */
+        /* Form & Section Styles */
         .form-row { display: flex; gap: 30px; margin-bottom: 25px; }
         .input-group { flex: 1; display: flex; flex-direction: column; }
         .input-group label { font-size: 13px; color: #878787; margin-bottom: 8px; font-weight: 500; }
-        .input-group input { padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #212121; outline: none; background: #fafafa; transition: 0.3s; }
-        .input-group input:focus { border-color: #2874f0; background: #fff; }
-        .input-group input:disabled { background: #f5f5f5; color: #878787; cursor: not-allowed; }
+        .input-group input, .input-group textarea { padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 15px; color: #212121; outline: none; background: #fafafa; transition: 0.3s; font-family: 'Inter', sans-serif; }
+        .input-group input:focus, .input-group textarea:focus { border-color: #2874f0; background: #fff; }
+        .input-group input:disabled, .input-group textarea:disabled { background: #f5f5f5; color: #878787; cursor: not-allowed; }
+        .input-group textarea { resize: vertical; min-height: 80px; }
 
         .gender-options { display: flex; gap: 20px; align-items: center; margin-top: 5px; }
         .gender-options label { font-size: 15px; color: #212121; font-weight: 400; display: flex; align-items: center; gap: 8px; cursor: pointer; }
@@ -96,12 +91,12 @@
                     <i class="fa-solid fa-angle-down"></i>
                 </button>
                 <div class="dropdown-content">
-                        <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
-                        <a href="wishlist.html"> <i class="fa-regular fa-heart"></i> Wishlist</a>
-                        <a href="cart.html"><i class="fa-regular fa-user"></i> My Cart</a>
-                        <a href="orders.html"><i class="fa-solid fa-box"></i> My Orders</a>
-                        <hr style="margin: 5px 0; border: none; border-top: 1px solid #f0f0f0;">
-                        <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+                    <a href="wishlist.html"> <i class="fa-regular fa-heart"></i> Wishlist</a>
+                    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> My Cart</a>
+                    <a href="orders.html"><i class="fa-solid fa-box"></i> My Orders</a>
+                    <hr style="margin: 5px 0; border: none; border-top: 1px solid #f0f0f0;">
+                    <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                 </div>
             </div>
         </nav>
@@ -109,6 +104,7 @@
 
     <div class="profile-container">
         
+        <!-- SIDEBAR -->
         <aside class="profile-sidebar">
             <div class="user-greeting">
                 <div class="user-avatar">
@@ -124,13 +120,13 @@
                 <a href="orders.html" class="menu-item">
                     <i class="fa-solid fa-box-open"></i> My Orders
                 </a>
-                <a href="profile.html" class="menu-item active">
-                    <i class="fa-solid fa-user-pen"></i> Profile Information
-                </a>
                 <a href="wishlist.html" class="menu-item">
                     <i class="fa-solid fa-heart"></i> My Wishlist
                 </a>
-                <a href="#" class="menu-item">
+                <a onclick="switchSection('profile')" class="menu-item active" id="menuProfile">
+                    <i class="fa-solid fa-user-pen"></i> Profile Information
+                </a>
+                <a onclick="switchSection('address')" class="menu-item" id="menuAddress">
                     <i class="fa-solid fa-location-dot"></i> Manage Addresses
                 </a>
                 <a href="help.html" class="menu-item">
@@ -142,51 +138,109 @@
             </div>
         </aside>
 
+        <!-- MAIN CONTENT CONTAINER -->
         <main class="profile-content">
-            <div class="content-header">
-                <h2>Personal Information</h2>
-                <button class="edit-btn" onclick="enableEdit()">Edit</button>
-            </div>
-
-            <form id="profileForm" onsubmit="saveProfile(event)">
-                <div class="form-row">
-                    <div class="input-group">
-                        <label>First Name</label>
-                        <input type="text" id="firstName" value="" disabled required>
-                    </div>
-                    <div class="input-group">
-                        <label>Last Name</label>
-                        <input type="text" id="lastName" value="" disabled required>
-                    </div>
+            
+            <!-- SECTION 1: PROFILE INFORMATION -->
+            <div id="profileSection">
+                <div class="content-header">
+                    <h2>Personal Information</h2>
+                    <button class="edit-btn" onclick="enableEditProfile()">Edit</button>
                 </div>
 
-                <div class="form-row">
-                    <div class="input-group">
-                        <label>Your Gender</label>
-                        <div class="gender-options">
-                            <label><input type="radio" name="gender" value="Male" disabled> Male</label>
-                            <label><input type="radio" name="gender" value="Female" disabled> Female</label>
+                <form id="profileForm" onsubmit="saveProfile(event)">
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>First Name</label>
+                            <input type="text" id="firstName" value="" disabled required>
+                        </div>
+                        <div class="input-group">
+                            <label>Last Name</label>
+                            <input type="text" id="lastName" value="" disabled required>
                         </div>
                     </div>
-                </div>
 
-                <div class="content-header" style="margin-top: 40px;">
-                    <h2>Email Address & Mobile</h2>
-                </div>
-
-                <div class="form-row">
-                    <div class="input-group">
-                        <label>Email Address</label>
-                        <input type="email" id="emailAddress" value="" disabled required>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Your Gender</label>
+                            <div class="gender-options">
+                                <label><input type="radio" name="gender" value="Male" disabled> Male</label>
+                                <label><input type="radio" name="gender" value="Female" disabled> Female</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>Mobile Number</label>
-                        <input type="tel" id="mobileNumber" value="" disabled required pattern="[0-9]{10}">
+
+                    <div class="content-header" style="margin-top: 40px;">
+                        <h2>Email Address & Mobile</h2>
                     </div>
+
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Email Address</label>
+                            <input type="email" id="emailAddress" value="" disabled required>
+                        </div>
+                        <div class="input-group">
+                            <label>Mobile Number</label>
+                            <input type="tel" id="mobileNumber" value="" disabled required pattern="[0-9]{10}">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="save-btn" id="saveProfileBtn">SAVE CHANGES</button>
+                </form>
+            </div>
+
+            <!-- SECTION 2: MANAGE ADDRESS (Hidden by default, shown when clicking sidebar) -->
+            <div id="addressSection" style="display: none;">
+                <div class="content-header">
+                    <h2>Manage Delivery Address</h2>
+                    <button class="edit-btn" onclick="enableEditAddress()">Edit</button>
                 </div>
 
-                <button type="submit" class="save-btn" id="saveBtn">SAVE CHANGES</button>
-            </form>
+                <form id="addressForm" onsubmit="saveAddress(event)">
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <input type="text" id="addrFullName" value="" disabled required>
+                        </div>
+                        <div class="input-group">
+                            <label>Mobile Number</label>
+                            <input type="tel" id="addrMobile" value="" disabled required pattern="[0-9]{10}" maxlength="10">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Pincode</label>
+                            <input type="text" id="addrPincode" value="" disabled required pattern="[0-9]{6}" maxlength="6">
+                        </div>
+                        <div class="input-group">
+                            <label>Locality / Area</label>
+                            <input type="text" id="addrLocality" value="" disabled required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Address (Area and Street)</label>
+                            <textarea id="addrAddress" disabled required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>City / District / Town</label>
+                            <input type="text" id="addrCity" value="" disabled required>
+                        </div>
+                        <div class="input-group">
+                            <label>State</label>
+                            <input type="text" id="addrState" value="" disabled required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="save-btn" id="saveAddressBtn">SAVE ADDRESS</button>
+                </form>
+            </div>
+
         </main>
     </div>
 
@@ -200,50 +254,102 @@
                 return;
             }
 
-            // Load actual data from the database
-            loadUserProfileData(userId); 
+            const storedName = localStorage.getItem("userName");
+            if (storedName) {
+                document.getElementById("nav-username").innerText = storedName;
+                document.getElementById("sidebar-username").innerText = storedName;
+            }
+
+            // Load both datasets on page load
+            loadUserProfileData(userId);
+            loadAddressData(userId);
         });
 
-        // ================= FETCH DATA FROM DATABASE =================
+        // ================= SWITCH TABS INTERNALLY =================
+        function switchSection(section) {
+            const profileSec = document.getElementById("profileSection");
+            const addressSec = document.getElementById("addressSection");
+            const menuProfile = document.getElementById("menuProfile");
+            const menuAddress = document.getElementById("menuAddress");
+
+            if (section === 'profile') {
+                profileSec.style.display = "block";
+                addressSec.style.display = "none";
+                menuProfile.classList.add("active");
+                menuAddress.classList.remove("active");
+            } else if (section === 'address') {
+                profileSec.style.display = "none";
+                addressSec.style.display = "block";
+                menuAddress.classList.add("active");
+                menuProfile.classList.remove("active");
+            }
+        }
+
+        // ================= FETCH PROFILE DATA =================
         function loadUserProfileData(userId) {
             fetch(`/VIZORA/UserProfileServlet?userId=${userId}`)
             .then(response => response.json())
             .then(data => {
-                // Populate inputs with database values
-                document.getElementById("firstName").value = data.firstName || "";
-                document.getElementById("lastName").value = data.lastName || "";
+                if (!data) return;
+                document.getElementById("firstName").value = data.firstName || data.first_name || "";
+                document.getElementById("lastName").value = data.lastName || data.last_name || "";
                 document.getElementById("emailAddress").value = data.email || "";
                 document.getElementById("mobileNumber").value = data.mobile || "";
 
-                // Set Gender Radio Button
-                if (data.gender) {
-                    const genderRadio = document.querySelector(`input[name="gender"][value="${data.gender}"]`);
+                const genderVal = data.gender ? data.gender.trim() : "";
+                if (genderVal) {
+                    const genderRadio = document.querySelector(`input[name="gender"][value="${genderVal}"]`);
                     if (genderRadio) genderRadio.checked = true;
                 }
 
-                // Update UI names
-                const fullName = (data.firstName + " " + data.lastName).trim();
-                document.getElementById("nav-username").innerText = fullName;
-                document.getElementById("sidebar-username").innerText = fullName;
-                localStorage.setItem("userName", fullName); // Keep local storage synced
+                const fName = document.getElementById("firstName").value;
+                const lName = document.getElementById("lastName").value;
+                if (fName || lName) {
+                    const fullName = (fName + " " + lName).trim();
+                    document.getElementById("nav-username").innerText = fullName;
+                    document.getElementById("sidebar-username").innerText = fullName;
+                    localStorage.setItem("userName", fullName);
+                }
             })
             .catch(error => console.error("Error loading profile:", error));
         }
 
-        // ================= ENABLE EDIT MODE =================
-        function enableEdit() {
+        // ================= FETCH ADDRESS DATA =================
+        function loadAddressData(userId) {
+            fetch(`/VIZORA/AddressServlet?userId=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (!data) return;
+                document.getElementById("addrFullName").value = data.full_name || "";
+                document.getElementById("addrMobile").value = data.mobile || "";
+                document.getElementById("addrPincode").value = data.pincode || "";
+                document.getElementById("addrLocality").value = data.locality || "";
+                document.getElementById("addrAddress").value = data.address || "";
+                document.getElementById("addrCity").value = data.city || "";
+                document.getElementById("addrState").value = data.state || "";
+            })
+            .catch(error => console.error("Error loading address:", error));
+        }
+
+        // ================= ENABLE PROFILE EDIT =================
+        function enableEditProfile() {
             const inputs = document.querySelectorAll("#profileForm input");
-            inputs.forEach(input => {
-                input.disabled = false;
-            });
-            document.getElementById("saveBtn").style.display = "block";
+            inputs.forEach(input => input.disabled = false);
+            document.getElementById("saveProfileBtn").style.display = "block";
             document.getElementById("firstName").focus();
         }
 
-        // ================= SAVE DATA TO DATABASE =================
+        // ================= ENABLE ADDRESS EDIT =================
+        function enableEditAddress() {
+            const inputs = document.querySelectorAll("#addressForm input, #addressForm textarea");
+            inputs.forEach(input => input.disabled = false);
+            document.getElementById("saveAddressBtn").style.display = "block";
+            document.getElementById("addrFullName").focus();
+        }
+
+        // ================= SAVE PROFILE =================
         function saveProfile(event) {
-            event.preventDefault(); // Prevent page reload
-            
+            event.preventDefault();
             const userId = localStorage.getItem("userId");
             const fname = document.getElementById("firstName").value.trim();
             const lname = document.getElementById("lastName").value.trim();
@@ -251,7 +357,6 @@
             const mobile = document.getElementById("mobileNumber").value.trim();
             const gender = document.querySelector('input[name="gender"]:checked')?.value || "";
 
-            // Prepare data to send
             const params = new URLSearchParams();
             params.append("userId", userId);
             params.append("firstName", fname);
@@ -260,7 +365,6 @@
             params.append("mobile", mobile);
             params.append("gender", gender);
 
-            // Call Servlet via POST
             fetch("/VIZORA/UserProfileServlet", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -269,23 +373,59 @@
             .then(response => response.text())
             .then(result => {
                 if (result.trim() === "success") {
-                    // Update UI Names Immediately
-                    const newFullName = fname + " " + lname;
+                    const newFullName = (fname + " " + lname).trim();
                     localStorage.setItem("userName", newFullName);
                     document.getElementById("nav-username").innerText = newFullName;
                     document.getElementById("sidebar-username").innerText = newFullName;
 
-                    // Lock the form again
-                    const inputs = document.querySelectorAll("#profileForm input");
-                    inputs.forEach(input => input.disabled = true);
-                    document.getElementById("saveBtn").style.display = "none";
-
+                    document.querySelectorAll("#profileForm input").forEach(input => input.disabled = true);
+                    document.getElementById("saveProfileBtn").style.display = "none";
                     alert("Profile updated successfully!");
                 } else {
-                    alert("Failed to update profile. Please try again.");
+                    alert("Failed to update profile.");
                 }
             })
             .catch(error => console.error("Error saving profile:", error));
+        }
+
+        // ================= SAVE ADDRESS =================
+        function saveAddress(event) {
+            event.preventDefault();
+            const userId = localStorage.getItem("userId");
+            const fullName = document.getElementById("addrFullName").value.trim();
+            const mobile = document.getElementById("addrMobile").value.trim();
+            const pincode = document.getElementById("addrPincode").value.trim();
+            const locality = document.getElementById("addrLocality").value.trim();
+            const address = document.getElementById("addrAddress").value.trim();
+            const city = document.getElementById("addrCity").value.trim();
+            const state = document.getElementById("addrState").value.trim();
+
+            const params = new URLSearchParams();
+            params.append("userId", userId);
+            params.append("fullName", fullName);
+            params.append("mobile", mobile);
+            params.append("pincode", pincode);
+            params.append("locality", locality);
+            params.append("address", address);
+            params.append("city", city);
+            params.append("state", state);
+
+            fetch("/VIZORA/AddressServlet", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: params.toString()
+            })
+            .then(response => response.text())
+            .then(result => {
+                if (result.trim() === "success") {
+                    document.querySelectorAll("#addressForm input, #addressForm textarea").forEach(input => input.disabled = true);
+                    document.getElementById("saveAddressBtn").style.display = "none";
+                    alert("Address updated successfully!");
+                } else {
+                    alert("Failed to update address.");
+                }
+            })
+            .catch(error => console.error("Error saving address:", error));
         }
 
         // ================= LOGOUT =================

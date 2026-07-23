@@ -44,7 +44,7 @@ public class ForgotPasswordServlet extends HttpServlet {
                     out.println("alert('Password updated successfully. Please login.');");
                     // CHANGE REQUIRED: Since login.html is in the root 'frontend/' folder, 
                     // and this request comes from the root, 'login.html' is correct.
-                    out.println("window.location='login.html';"); 
+                    out.println("window.location='/VIZORA/webapp/login.html';"); 
                     out.println("</script>");
                 } else {
                     out.println("<script>");
