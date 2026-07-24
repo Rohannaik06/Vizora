@@ -7,57 +7,219 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-
+    
     <style>
-        /* Global & Header */
+        /* ================= GLOBAL & HEADER CSS ================= */
         body { background: #f1f3f6; font-family: 'Inter', sans-serif; margin: 0; padding: 0; color: #212121; }
-        header { position: sticky; top: 0; width: 100%; height: 75px; background: #ffffff; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000; box-sizing: border-box; }
+        * { box-sizing: border-box; }
+        
+        header { position: sticky; top: 0; width: 100%; height: 75px; background: #ffffff; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000; }
         .logo { cursor: pointer; }
         .logo h2 { font-size: 26px; color: #2874f0; font-weight: 700; font-style: italic; margin: 0; }
         .logo span { color: #ff9f00; }
-        .logo small { color: #878787; font-size: 11px; font-weight: 500; }
+        .logo small { color: #878787; font-size: 11px; font-weight: 500; display: block; }
         
         nav { display: flex; align-items: center; gap: 20px; }
-        .cart-btn { background: #0d62e6; color: #fff; border: none; padding: 10px 24px; border-radius: 5px; cursor: pointer; font-weight: 500; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
-        .cart-btn:hover { background: #0b50bc; }
-        
-        /* Dropdown */
         .dropdown { position: relative; }
         .dropbtn { background: none; border: none; cursor: pointer; font-weight: 500; font-size: 16px; display: flex; align-items: center; gap: 6px; color: #333; padding: 10px; }
-        .dropbtn i { font-size: 16px;} 
+        .dropbtn i { font-size: 16px; } 
         .dropdown-content { display: none; position: absolute; top: 100%; right: 0; width: 200px; background: #fff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 999; padding: 10px 0; }
         .dropdown:hover .dropdown-content { display: block; }
         .dropdown-content a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; font-size: 14px; color: #333; text-decoration: none; transition: 0.3s; }
         .dropdown-content a:hover { background: #f5faff; color: #2874f0; padding-left: 25px; }
 
-        /* Orders Layout */
-        .orders-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
-        .page-title { font-size: 24px; font-weight: 600; margin-bottom: 25px; color: #212121; }
+        /* ================= ORDERS LAYOUT & FILTERS ================= */
+        .orders-page-wrapper { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: flex; gap: 24px; align-items: flex-start; }
+        
+        /* Filter Sidebar */
+        .filters-sidebar { width: 280px; background: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px; flex-shrink: 0; }
+        .filters-title { font-size: 18px; font-weight: 700; color: #212121; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+        .filter-group { margin-bottom: 25px; }
+        .filter-group h4 { font-size: 14px; font-weight: 600; color: #212121; margin: 0 0 12px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .filter-checkbox { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #555; margin-bottom: 10px; cursor: pointer; }
+        .filter-checkbox input { accent-color: #2874f0; width: 16px; height: 16px; cursor: pointer; }
 
-        .order-card { background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; overflow: hidden; border: 1px solid #e0e0e0; }
-        .order-header { background: #f8f9fa; padding: 15px 25px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #555; }
-        .order-body { padding: 25px; display: flex; gap: 20px; align-items: center; position: relative; }
-        .order-img { width: 100px; height: 100px; object-fit: contain; border: 1px solid #f0f0f0; border-radius: 6px; padding: 10px; }
+        /* Main Content Column */
+        .orders-main-content { flex: 1; min-width: 0; }
+        
+        /* Search Bar Bar */
+        .orders-search-bar { background: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 15px 20px; display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .orders-search-bar input { flex: 1; border: none; outline: none; font-size: 15px; font-family: 'Inter', sans-serif; background: transparent; color: #212121; }
+        .orders-search-bar i { color: #878787; font-size: 18px; }
+        .search-btn { background: #2874f0; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.3s; }
+        .search-btn:hover { background: #0d62e6; }
+
+        /* Order Cards */
+        .order-card { background: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 16px; overflow: hidden; border: 1px solid #f0f0f0; transition: 0.2s; }
+        .order-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .order-header { background: #fafafa; padding: 12px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #777; }
+        .order-body { padding: 20px; display: flex; gap: 20px; align-items: center; }
+        .order-img { width: 90px; height: 90px; object-fit: contain; border: 1px solid #f0f0f0; border-radius: 4px; padding: 5px; background: #fff; }
         
         .order-details { flex: 1; }
-        .order-brand { font-size: 13px; color: #878787; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
-        .order-name { font-size: 18px; font-weight: 500; color: #212121; margin: 0 0 10px 0; }
-        .order-price { font-size: 18px; font-weight: 700; color: #212121; }
+        .order-brand { font-size: 12px; color: #878787; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+        .order-name { font-size: 16px; font-weight: 600; color: #212121; margin: 0 0 8px 0; }
+        .order-price { font-size: 16px; font-weight: 700; color: #212121; }
 
-        .order-status { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-        .badge { padding: 6px 14px; font-size: 13px; font-weight: 600; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; }
-        .badge-pending { background: #fff3e0; color: #e65100; }
+        .order-status { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+        .badge { padding: 5px 12px; font-size: 12px; font-weight: 600; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-pending { background: #fff8e1; color: #f57f17; }
         .badge-confirmed { background: #e3f2fd; color: #1565c0; }
-        .badge-shipped { background: #f3e5f5; color: #6a1b9a; }
+        .badge-shipped { background: #f3e5f5; color: #7b1fa2; }
         .badge-delivered { background: #e8f5e9; color: #2e7d32; }
         .badge-cancelled { background: #ffebee; color: #c62828; }
 
-        .btn-cancel { background: #ffebee; color: #c62828; border: 1px solid #c62828; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600; transition: 0.3s; }
-        .btn-cancel:hover { background: #c62828; color: #fff; }
+        .btn-cancel { background: #fff; color: #d32f2f; border: 1px solid #d32f2f; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.3s; }
+        .btn-cancel:hover { background: #ffebee; }
 
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #2874f0; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 50px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* ==================================================
+           9. FOOTER (Professional & Modern)
+        ================================================== */
+        .professional-footer {
+            background-color: #172337;
+            color: #ffffff;
+            padding: 60px 0 0 0;
+            margin-top: 60px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-container {
+            width: 96%;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            padding-bottom: 50px;
+        }
+
+        .footer-col .footer-logo h2 {
+            font-size: 28px;
+            font-style: italic;
+            margin-bottom: 15px;
+            color: #2874f0;
+        }
+        .footer-col .footer-logo span {
+            color: #ff9f00;
+        }
+        .footer-col p {
+            font-size: 14px;
+            color: #878787;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            height: 36px;
+            width: 36px;
+            background-color: #ffffff1a;
+            margin-right: 10px;
+            text-align: center;
+            line-height: 36px;
+            border-radius: 50%;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .social-links a:hover {
+            background-color: #2874f0;
+            transform: translateY(-3px);
+        }
+
+        .footer-col h3 {
+            font-size: 18px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            position: relative;
+            color: #ffffff;
+        }
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            background-color: #2874f0;
+            height: 2px;
+            width: 40px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 15px;
+        }
+        .footer-col ul li a {
+            font-size: 14px;
+            color: #878787;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .footer-col ul li a:hover {
+            color: #ffffff;
+            padding-left: 6px;
+        }
+
+        .subscribe-box {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+        .subscribe-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            font-size: 14px;
+            background: #ffffff;
+        }
+        .subscribe-box button {
+            padding: 12px 18px;
+            background-color: #ff9f00;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .subscribe-box button:hover {
+            background-color: #e68f00;
+        }
+
+        .footer-bottom {
+            background-color: #0b1423;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer-bottom p {
+            font-size: 13px;
+            color: #878787;
+            margin: 0;
+        }
+        .payment-icons i {
+            font-size: 24px;
+            color: #878787;
+            margin-left: 12px;
+            transition: 0.3s;
+        }
+        .payment-icons i:hover {
+            color: #ffffff;
+        }
+
+        @media (max-width: 900px) {
+            .orders-page-wrapper { flex-direction: column; }
+            .filters-sidebar { width: 100%; }
+            .footer-container { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -65,30 +227,124 @@
     <header>
         <div class="logo" onclick="window.location.href='index.html'">
             <h2>Vizo<span>ra</span></h2>
-             <small>See Beyond Style</small>
+            <small>See Beyond Style</small>
         </div>
         <nav>
             <div class="dropdown">
-                <button class="dropbtn"><i class="fa-solid fa-circle-user" style="font-size: 20px; font-weight:600;"></i> <span id="nav-username">Account</span> <i class="fa-solid fa-angle-down"></i></button>
+                <button class="dropbtn">
+                    <i class="fa-solid fa-circle-user" style="font-size: 20px; font-weight:600;"></i> 
+                    <span id="nav-username">Account</span> 
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
                 <div class="dropdown-content">
-                        <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
-                        <a href="profile.html"><i class="fa-solid fa-box"></i>My Profile</a>
-                        <a href="wishlist.html"> <i class="fa-regular fa-heart"></i> Wishlist</a>
-                        <a href="cart.html"><i class="fa-regular fa-user"></i> My Cart</a>
-                        <hr style="margin: 5px 0; border: none; border-top: 1px solid #f0f0f0;">
-                        <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+                    <a href="profile.html"><i class="fa-solid fa-user-pen"></i> My Profile</a>
+                    <a href="wishlist.html"><i class="fa-regular fa-heart"></i> Wishlist</a>
+                    <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> My Cart</a>
+                    <hr style="margin: 5px 0; border: none; border-top: 1px solid #f0f0f0;">
+                    <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                 </div>
             </div>
         </nav>
     </header>
 
-    <div class="orders-container">
-        <h2 class="page-title">My Orders</h2>
-        <div id="loader" class="loader"></div>
-        <div id="orders-list"></div>
+    <div class="orders-page-wrapper">
+        <!-- Filters Sidebar -->
+        <aside class="filters-sidebar">
+            <div class="filters-title">Filters</div>
+            
+            <div class="filter-group">
+                <h4>Order Status</h4>
+                <label class="filter-checkbox"><input type="checkbox" value="PENDING" class="status-filter" onchange="filterOrders()"> Pending</label>
+                <label class="filter-checkbox"><input type="checkbox" value="CONFIRMED" class="status-filter" onchange="filterOrders()"> On the way</label>
+                <label class="filter-checkbox"><input type="checkbox" value="DELIVERED" class="status-filter" onchange="filterOrders()"> Delivered</label>
+                <label class="filter-checkbox"><input type="checkbox" value="CANCELLED" class="status-filter" onchange="filterOrders()"> Cancelled</label>
+            </div>
+
+            <div class="filter-group">
+                <h4>Order Time</h4>
+                <label class="filter-checkbox"><input type="checkbox" value="30" class="time-filter" onchange="filterOrders()"> Last 30 days</label>
+                <label class="filter-checkbox"><input type="checkbox" value="2024" class="time-filter" onchange="filterOrders()"> 2024</label>
+                <label class="filter-checkbox"><input type="checkbox" value="2023" class="time-filter" onchange="filterOrders()"> 2023</label>
+                <label class="filter-checkbox"><input type="checkbox" value="older" class="time-filter" onchange="filterOrders()"> Older</label>
+            </div>
+        </aside>
+
+        <!-- Main Orders List -->
+        <main class="orders-main-content">
+            <div class="orders-search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Search your orders by item name, brand or order ID..." onkeyup="filterOrders()">
+                <button class="search-btn" onclick="filterOrders()">Search Orders</button>
+            </div>
+
+            <div id="loader" class="loader"></div>
+            <div id="orders-list"></div>
+        </main>
     </div>
 
+    <!-- Professional Footer -->
+    <footer class="professional-footer">
+        <div class="footer-container">
+            
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <h2>Vizo<span>ra</span></h2>
+                </div>
+                <p>Your ultimate destination for premium eyewear. We provide the best quality sunglasses to help you see beyond style.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Shop Collection</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact Support</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Customer Policies</h3>
+                <ul>
+                    <li><a href="help.html">FAQ & Help</a></li>
+                    <li><a href="#">Return Policy</a></li>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Newsletter</h3>
+                <p>Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.</p>
+                <div class="subscribe-box">
+                    <input type="email" placeholder="Enter your email">
+                    <button><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 Vizora. All Rights Reserved.</p>
+            <div class="payment-icons">
+                <i class="fa-brands fa-cc-visa"></i>
+                <i class="fa-brands fa-cc-mastercard"></i>
+                <i class="fa-brands fa-cc-paypal"></i>
+                <i class="fa-brands fa-cc-amazon-pay"></i>
+            </div>
+        </div>
+    </footer>
+
     <script>
+        let allOrders = [];
+
         document.addEventListener("DOMContentLoaded", function() {
             const userId = localStorage.getItem("userId");
             if (!userId) { window.location.href = "login.html"; return; }
@@ -101,34 +357,74 @@
             .then(res => res.json())
             .then(data => {
                 document.getElementById("loader").style.display = "none";
-                let html = "";
-                data.forEach(order => {
-                    let cancelBtn = (order.status === "PENDING" || order.status === "CONFIRMED") 
-                        ? `<button class="btn-cancel" onclick="cancelOrder(${order.orderId})">Cancel Order</button>` 
-                        : "";
-
-                    html += `
-                    <div class="order-card">
-                        <div class="order-header">
-                            <div>Order ID: #VZ-${order.orderId}</div>
-                            <div>Placed: ${order.date}</div>
-                        </div>
-                        <div class="order-body">
-                            <img src="images/${order.thumbnail}" class="order-img">
-                            <div class="order-details">
-                                <div class="order-brand">${order.brand}</div>
-                                <h3 class="order-name">${order.name}</h3>
-                                <div class="order-price">₹${order.total}</div>
-                            </div>
-                            <div class="order-status">
-                                <span class="badge badge-${order.status.toLowerCase()}">${order.status}</span>
-                                ${cancelBtn}
-                            </div>
-                        </div>
-                    </div>`;
-                });
-                document.getElementById("orders-list").innerHTML = html || "<p>No orders found.</p>";
+                allOrders = data || [];
+                displayOrders(allOrders);
+            })
+            .catch(error => {
+                console.error("Error fetching orders:", error);
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("orders-list").innerHTML = "<p style='text-align:center; padding: 40px; color: #878787;'>Failed to load orders.</p>";
             });
+        }
+
+        function displayOrders(orders) {
+            const container = document.getElementById("orders-list");
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div style="background: #fff; padding: 50px; text-align: center; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <i class="fa-solid fa-box-open" style="font-size: 50px; color: #c2c2c2; margin-bottom: 15px;"></i>
+                        <h3 style="margin: 0 0 8px; color: #212121;">No orders found</h3>
+                        <p style="color: #878787; margin: 0;">You haven't placed any orders matching your criteria yet.</p>
+                    </div>`;
+                return;
+            }
+
+            let html = "";
+            orders.forEach(order => {
+                const statusStr = order.status ? order.status.toUpperCase() : "PENDING";
+                let cancelBtn = (statusStr === "PENDING" || statusStr === "CONFIRMED") 
+                    ? `<button class="btn-cancel" onclick="cancelOrder(${order.orderId})">Cancel Order</button>` 
+                    : "";
+
+                html += `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>Order ID: <strong>#VZ-${order.orderId}</strong></div>
+                        <div>Placed on: ${order.date || 'N/A'}</div>
+                    </div>
+                    <div class="order-body">
+                        <img src="images/${order.thumbnail}" class="order-img" alt="Product">
+                        <div class="order-details">
+                            <div class="order-brand">${order.brand || ''}</div>
+                            <h3 class="order-name">${order.name}</h3>
+                            <div class="order-price">₹${order.total}</div>
+                        </div>
+                        <div class="order-status">
+                            <span class="badge badge-${statusStr.toLowerCase()}">${order.status}</span>
+                            ${cancelBtn}
+                        </div>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function filterOrders() {
+            const searchQuery = document.getElementById("searchInput").value.toLowerCase().trim();
+            const selectedStatuses = Array.from(document.querySelectorAll(".status-filter:checked")).map(cb => cb.value);
+
+            let filtered = allOrders.filter(order => {
+                const matchesSearch = 
+                    (order.name && order.name.toLowerCase().includes(searchQuery)) ||
+                    (order.brand && order.brand.toLowerCase().includes(searchQuery)) ||
+                    (order.orderId && order.orderId.toString().includes(searchQuery));
+
+                const matchesStatus = selectedStatuses.length === 0 || selectedStatuses.includes(order.status.toUpperCase());
+
+                return matchesSearch && matchesStatus;
+            });
+
+            displayOrders(filtered);
         }
 
         function cancelOrder(orderId) {
@@ -141,7 +437,7 @@
             .then(res => res.text())
             .then(data => {
                 if (data.trim() === "success") {
-                    alert("Order cancelled!");
+                    alert("Order cancelled successfully!");
                     location.reload();
                 } else {
                     alert("Could not cancel order.");
@@ -149,7 +445,10 @@
             });
         }
 
-        function logout() { localStorage.clear(); window.location.href = "index.html"; }
+        function logout() { 
+            localStorage.clear(); 
+            window.location.href = "index.html"; 
+        }
     </script>
 </body>
 </html>
