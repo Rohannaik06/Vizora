@@ -150,7 +150,7 @@
                 <hr class="dashed-line">
                 <p class="savings-msg">You will save <span id="total-savings">₹0</span> on this order</p>
             </div>
-            <button class="place-order-btn">PLACE ORDER</button>
+            <button class="place-order-btn" id="placeOrderBtn">PLACE ORDER</button>
         </div>
     </div>
 
@@ -271,6 +271,17 @@
             })
             .catch(error => console.error("Error removing item:", error));
         }
+        document.getElementById("placeOrderBtn").addEventListener("click", function() {
+            const totalItems = parseInt(document.getElementById("cart-item-count").innerText);
+            
+            if (totalItems <= 0) {
+                alert("Your cart is empty. Add items before placing an order.");
+                return;
+            }
+            
+            // Explicitly pass a flag indicating checkout is coming from the cart
+            window.location.href = "/VIZORA/webapp/checkout.html?from=cart";
+        });
     </script>
 </body>
 </html>

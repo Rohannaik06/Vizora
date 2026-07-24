@@ -20,41 +20,62 @@ public class CartActionServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         String action = request.getParameter("action");
-        int cartId = Integer.parseInt(request.getParameter("cartId"));
+        String cartIdParam = request.getParameter("cartId");
 
-        try (Connection con = DBConnection.getConnection()) {
-            
-            // १. जर ॲक्शन "update" असेल (Quantity कमी/जास्त करण्यासाठी)
-            if ("update".equals(action)) {
-                int change = Integer.parseInt(request.getParameter("change"));
-                
-                // आधी क्वांटिटी अपडेट करा (+1 किंवा -1)
-                String updateSql = "UPDATE cart SET quantity = quantity + ? WHERE cart_id = ?";
-                try (PreparedStatement ps = con.prepareStatement(updateSql)) {
-                    ps.setInt(1, change);
-                    ps.setInt(2, cartId);
-                    ps.executeUpdate();
-                }
-                
-                // प्रो-टीप: जर क्वांटिटी 0 झाली, तर तो आयटम कार्टमधून आपोआप डिलीट करा
-                String deleteSql = "DELETE FROM cart WHERE cart_id = ? AND quantity <= 0";
-                try (PreparedStatement ps = con.prepareStatement(deleteSql)) {
-                    ps.setInt(1, cartId);
-                    ps.executeUpdate();
-                }
-                out.print("success");
+        // Validate incoming parameters to prevent NumberFormatException crashes
+        if (action == null || cartIdParam == null) {
+            out.print("error");
+            return;
+        }
 
-            } 
-            // २. जर ॲक्शन "remove" असेल (आयटम पूर्णपणे काढण्यासाठी)
-            else if ("remove".equals(action)) {
-                String deleteSql = "DELETE FROM cart WHERE cart_id = ?";
-                try (PreparedStatement ps = con.prepareStatement(deleteSql)) {
-                    ps.setInt(1, cartId);
-                    ps.executeUpdate();
+        try {
+            int cartId = Integer.parseInt(cartIdParam);
+
+            try (Connection con = DBConnection.getConnection()) {
+                
+                if ("update".equals(action)) {
+                    String changeParam = request.getParameter("change");
+                    if (changeParam == null) {
+                        out.print("error");
+                        return;
+                    }
+                    int change = Integer.parseInt(changeParam);
+                    
+                    // 1. First update the quantity safely
+                    String updateSql = "UPDATE cart SET quantity = quantity + ? WHERE cart_id = ?";
+                    try (PreparedStatement ps = con.prepareStatement(updateSql)) {
+                        ps.setInt(1, change);
+                        ps.setInt(2, cartId);
+                        ps.executeUpdate();
+                    }
+                    
+                    // 2. Prevent negative quantities and automatically remove if <= 0
+                    String deleteSql = "DELETE FROM cart WHERE cart_id = ? AND quantity <= 0";
+                    try (PreparedStatement ps = con.prepareStatement(deleteSql)) {
+                        ps.setInt(1, cartId);
+                        ps.executeUpdate();
+                    }
+                    
+                    out.print("success");
+
+                } 
+                else if ("remove".equals(action)) {
+                    String deleteSql = "DELETE FROM cart WHERE cart_id = ?";
+                    try (PreparedStatement ps = con.prepareStatement(deleteSql)) {
+                        ps.setInt(1, cartId);
+                        ps.executeUpdate();
+                    }
+                    out.print("success");
+                } 
+                else {
+                    out.print("error");
                 }
-                out.print("success");
+
             }
-
+        } catch (NumberFormatException e) {
+            // Handles invalid parameter formats gracefully
+            e.printStackTrace();
+            out.print("error");
         } catch (Exception e) {
             e.printStackTrace();
             out.print("error");

@@ -219,34 +219,48 @@
             } else {
                 alert("Please login to proceed with checkout.");
                 window.location.href = "login.html";
-            }
-
-            // Fetch Product ID from URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('productId');
-
-            if (!productId) {
-                alert("Invalid request. Redirecting to home.");
-                window.location.href = "index.html";
                 return;
             }
 
-            // Load Product Details for Summary
+            const userId = localStorage.getItem("userId");
+            if (!userId) {
+                alert("Session expired. Please login again.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            // Check URL parameters to handle both Single Product (Buy Now) and Cart Checkout
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('productId');
+            const fromCart = urlParams.get('from');
+
+            if (fromCart === 'cart') {
+                loadCheckoutFromCart(userId);
+            } else if (productId) {
+                loadCheckoutSingleProduct(productId);
+            } else {
+                alert("Invalid request. Redirecting to home.");
+                window.location.href = "index.html";
+            }
+        });
+
+        // Load Summary for Single Product (Buy Now)
+        function loadCheckoutSingleProduct(productId) {
             fetch(`/VIZORA/ProductDetailsServlet?id=${productId}`)
             .then(res => res.json())
             .then(data => {
-                if(Object.keys(data).length === 0) {
+                if (Object.keys(data).length === 0) {
                     alert("Product details not found.");
                     window.location.href = "index.html";
                     return;
                 }
 
-                // Populate Summary UI
                 document.getElementById("sum-img").src = "images/" + data.thumbnail;
                 document.getElementById("sum-name").innerText = data.name;
                 document.getElementById("sum-brand").innerText = data.brand;
 
-                document.getElementById("bill-mrp").innerText = `₹${data.originalPrice > 0 ? data.originalPrice : data.sellingPrice}`;
+                const mrp = data.originalPrice > 0 ? data.originalPrice : data.sellingPrice;
+                document.getElementById("bill-mrp").innerText = `₹${mrp}`;
                 
                 if (data.originalPrice > data.sellingPrice) {
                     const discountAmt = data.originalPrice - data.sellingPrice;
@@ -258,8 +272,43 @@
                 finalPrice = data.sellingPrice;
                 document.getElementById("bill-total").innerText = `₹${finalPrice}`;
             })
-            .catch(err => console.error(err));
-        });
+            .catch(err => console.error("Error loading single product:", err));
+        }
+
+        // Load Summary for Cart Items Checkout
+        function loadCheckoutFromCart(userId) {
+            fetch(`/VIZORA/ViewCartServlet?userId=${userId}`)
+            .then(response => response.json())
+            .then(cartItems => {
+                if (!cartItems || cartItems.length === 0) {
+                    alert("Your cart is empty.");
+                    window.location.href = "cart.html";
+                    return;
+                }
+
+                let totalMrp = 0;
+                let totalSellingPrice = 0;
+                let totalItemsCount = 0;
+
+                cartItems.forEach(item => {
+                    totalMrp += (item.original * item.quantity);
+                    totalSellingPrice += (item.price * item.quantity);
+                    totalItemsCount += item.quantity;
+                });
+
+                // Display summary details for cart checkout
+                document.getElementById("sum-img").src = "images/" + cartItems[0].image;
+                document.getElementById("sum-name").innerText = cartItems[0].name + (cartItems.length > 1 ? ` and ${totalItemsCount - cartItems[0].quantity} other item(s)` : '');
+                document.getElementById("sum-brand").innerText = cartItems.length > 1 ? "Multiple Brands" : cartItems[0].brand;
+
+                document.getElementById("bill-mrp").innerText = `₹${totalMrp}`;
+                document.getElementById("bill-discount").innerText = `- ₹${totalMrp - totalSellingPrice}`;
+
+                finalPrice = totalSellingPrice;
+                document.getElementById("bill-total").innerText = `₹${finalPrice}`;
+            })
+            .catch(error => console.error("Error loading cart summary:", error));
+        }
 
         // Payment Accordion UI Logic
         function togglePayment() {
@@ -273,12 +322,11 @@
         }
 
         // Place Order Logic
-        // Place Order Logic (Connected to Database)
         function placeOrder() {
-            // Get user ID and product ID
             const userId = localStorage.getItem("userId");
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('productId');
+            const fromCart = urlParams.get('from');
 
             if (!userId) {
                 alert("Session expired. Please login again.");
@@ -311,7 +359,6 @@
             // Prepare data to send to Servlet
             const params = new URLSearchParams();
             params.append("userId", userId);
-            params.append("productId", productId);
             params.append("fullName", fullName);
             params.append("mobile", mobile);
             params.append("pincode", pincode);
@@ -321,8 +368,17 @@
             params.append("state", state);
             params.append("paymentMethod", paymentMethod);
 
+            // Send appropriate parameters based on where checkout initiated from
+            let endpoint = "/VIZORA/OrderServlet";
+            if (fromCart === 'cart') {
+                params.append("checkoutType", "cart");
+            } else if (productId) {
+                params.append("productId", productId);
+                params.append("checkoutType", "direct");
+            }
+
             // Send to Java Backend 
-            fetch("/VIZORA/OrderServlet", {
+            fetch(endpoint, {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: params.toString()
@@ -331,7 +387,7 @@
             .then(data => {
                 if (data.trim() === "success") {
                     alert(`🎉 Order Placed Successfully!\n\nPayment Mode: ${paymentMethod}\n\nThank you for shopping with Vizora!`);
-                    window.location.href = "orders.html"; // Redirect to the user's order history page
+                    window.location.href = "orders.html";
                 } else {
                     alert("Failed to place order. " + data);
                     btn.innerHTML = 'PLACE ORDER';

@@ -222,7 +222,7 @@
         function addToCart(pid) {
             const userId = localStorage.getItem("userId");
             if (!userId) { window.location.href = "login.html"; return; }
-            fetch("CartServlet", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: `userId=${userId}&productId=${pid}` })
+            fetch("/VIZORA/CartServlet", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: `userId=${userId}&productId=${pid}` })
             .then(() => alert("Added to Cart!"));
         }
         function logout() { localStorage.clear(); window.location.href = "index.html"; }
