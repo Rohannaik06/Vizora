@@ -24,10 +24,10 @@ public class ProductServlet extends HttpServlet {
 
         try (Connection con = DBConnection.getConnection();
              Statement st = con.createStatement();
-             // येथे क्वेरी बदलली आहे: फक्त नवीन टेबलमधील कॉलम्स घेतले आहेत
              ResultSet rs = st.executeQuery(
-                     "SELECT product_id, product_name, brand, category, gender, " +
-                     "original_price, selling_price, stock, thumbnail, status " +
+                     "SELECT product_id, product_name, brand, category, gender, description, " +
+                     "original_price, selling_price, stock, thumbnail, " +
+                     "image_1, image_2, image_3, image_4, status " +
                      "FROM products WHERE status='ACTIVE' ORDER BY product_id DESC")) {
 
             boolean first = true;
@@ -52,13 +52,16 @@ public class ProductServlet extends HttpServlet {
                 json.append("\"brand\":\"").append(escapeJson(rs.getString("brand"))).append("\",");
                 json.append("\"category\":\"").append(escapeJson(rs.getString("category"))).append("\",");
                 json.append("\"gender\":\"").append(escapeJson(rs.getString("gender"))).append("\",");
-                
+                json.append("\"description\":\"").append(escapeJson(rs.getString("description"))).append("\",");
                 json.append("\"originalPrice\":").append(origPrice).append(",");
                 json.append("\"sellingPrice\":").append(sellPrice).append(",");
                 json.append("\"discount\":").append(discount).append(",");
                 json.append("\"stock\":").append(rs.getInt("stock")).append(",");
-                json.append("\"thumbnail\":\"").append(escapeJson(rs.getString("thumbnail"))).append("\"");
-                // polarized आणि featured इथून काढून टाकले आहेत
+                json.append("\"thumbnail\":\"").append(escapeJson(rs.getString("thumbnail"))).append("\",");
+                json.append("\"image1\":\"").append(escapeJson(rs.getString("image_1"))).append("\",");
+                json.append("\"image2\":\"").append(escapeJson(rs.getString("image_2"))).append("\",");
+                json.append("\"image3\":\"").append(escapeJson(rs.getString("image_3"))).append("\",");
+                json.append("\"image4\":\"").append(escapeJson(rs.getString("image_4"))).append("\"");
                 json.append("}");
             }
 
@@ -75,6 +78,9 @@ public class ProductServlet extends HttpServlet {
         if (data == null) {
             return "";
         }
-        return data.replace("\\", "\\\\").replace("\"", "\\\"");
+        return data.replace("\\", "\\\\")
+                   .replace("\"", "\\\"")
+                   .replace("\n", "\\n")
+                   .replace("\r", "\\r");
     }
 }

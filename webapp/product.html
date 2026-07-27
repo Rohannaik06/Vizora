@@ -213,9 +213,14 @@
             document.getElementById("btn-add-cart").onclick = () => addToCart(data.id);
             document.getElementById("btn-buy-now").onclick = () => window.location.href = "checkout.html?productId=" + data.id;
 
-            const thumbs = [data.thumbnail, data.image1, data.image2, data.image3];
+            // इथे सर्व ५ इमेजेसचा (Thumbnail + 4 Sub-images) समावेश केला आहे
+            const thumbs = [data.thumbnail, data.image1, data.image2, data.image3, data.image4];
             let thumbHtml = "";
-            thumbs.forEach(img => { if(img) thumbHtml += `<img src="images/${img}" onclick="document.getElementById('main-image').src=this.src">`; });
+            thumbs.forEach(img => { 
+                if(img) {
+                    thumbHtml += `<img src="images/${img}" onclick="document.getElementById('main-image').src=this.src">`; 
+                }
+            });
             document.getElementById("thumb-gallery").innerHTML = thumbHtml;
         });
 

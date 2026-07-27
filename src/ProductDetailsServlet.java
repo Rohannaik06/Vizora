@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
 @WebServlet("/ProductDetailsServlet")
 public class ProductDetailsServlet extends HttpServlet {
 
@@ -46,15 +45,16 @@ public class ProductDetailsServlet extends HttpServlet {
                                 discount = (int) Math.round(((original - selling) / original) * 100);
                             }
 
-                            // Fetch the extra images safely
+                            // Fetch all 4 extra images safely (image_1 to image_4)
                             String img1 = rs.getString("image_1") != null ? rs.getString("image_1") : "";
                             String img2 = rs.getString("image_2") != null ? rs.getString("image_2") : "";
                             String img3 = rs.getString("image_3") != null ? rs.getString("image_3") : "";
+                            String img4 = rs.getString("image_4") != null ? rs.getString("image_4") : "";
                             String status = rs.getString("status") != null ? rs.getString("status") : "";
 
-                            // Build JSON string with Locale.US to ensure decimals use dots (.) instead of commas (,)
+                            // Build JSON string including image1, image2, image3, image4
                             String json = String.format(java.util.Locale.US,
-                                "{\"id\":%d, \"name\":\"%s\", \"brand\":\"%s\", \"category\":\"%s\", \"gender\":\"%s\", \"description\":\"%s\", \"originalPrice\":%.2f, \"sellingPrice\":%.2f, \"discount\":%d, \"stock\":%d, \"thumbnail\":\"%s\", \"image1\":\"%s\", \"image2\":\"%s\", \"image3\":\"%s\", \"status\":\"%s\"}",
+                                "{\"id\":%d, \"name\":\"%s\", \"brand\":\"%s\", \"category\":\"%s\", \"gender\":\"%s\", \"description\":\"%s\", \"originalPrice\":%.2f, \"sellingPrice\":%.2f, \"discount\":%d, \"stock\":%d, \"thumbnail\":\"%s\", \"image1\":\"%s\", \"image2\":\"%s\", \"image3\":\"%s\", \"image4\":\"%s\", \"status\":\"%s\"}",
                                 rs.getInt("product_id"),
                                 escapeJson(rs.getString("product_name")),
                                 escapeJson(rs.getString("brand")),
@@ -69,6 +69,7 @@ public class ProductDetailsServlet extends HttpServlet {
                                 escapeJson(img1),
                                 escapeJson(img2),
                                 escapeJson(img3),
+                                escapeJson(img4),
                                 escapeJson(status)
                             );
 
