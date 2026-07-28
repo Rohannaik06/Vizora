@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vizora Admin | Professional Control Panel</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f8fafc; color: #1e293b; overflow-x: hidden; }
+
+        /* Header / Navbar */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 80px;
+            background: #ffffff; display: flex; justify-content: space-between; align-items: center;
+            padding: 0 8%; box-shadow: 0 4px 20px rgba(0,0,0,0.03); z-index: 1000;
+        }
+        .logo { cursor: pointer; }
+        .logo h2 { font-size: 28px; color: #2874f0; font-weight: 800; font-style: italic; margin: 0; letter-spacing: -0.5px; }
+        .logo span { color: #ff9f00; }
+        .logo small { color: #64748b; font-size: 11px; font-weight: 600; display: block; letter-spacing: 0.5px; }
+
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .btn-login-nav { background: #2874f0; color: #fff; border: none; padding: 10px 24px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+        .btn-login-nav:hover { background: #1d5ed8; box-shadow: 0 4px 12px rgba(40,116,240,0.3); }
+
+        /* Hero Section */
+        .hero {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 140px 8% 80px 8%; min-height: 90vh; background: linear-gradient(135deg, #f0f4ff 0%, #f8fafc 100%);
+        }
+        .hero-content { flex: 1; max-width: 600px; }
+        .hero-content h1 { font-size: 48px; font-weight: 700; line-height: 1.2; color: #0f172a; margin-bottom: 20px; }
+        .hero-content h1 span { color: #2874f0; }
+        .hero-content p { font-size: 16px; color: #64748b; line-height: 1.6; margin-bottom: 30px; }
+        
+        .hero-buttons { display: flex; gap: 15px; }
+        .btn-primary { background: #0f172a; color: #fff; padding: 14px 28px; font-size: 15px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+        .btn-primary:hover { background: #2874f0; }
+
+        .hero-stats { display: flex; gap: 40px; margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 25px; }
+        .stat-item h3 { font-size: 24px; font-weight: 700; color: #0f172a; }
+        .stat-item p { font-size: 13px; color: #64748b; }
+
+        .hero-image { flex: 1; display: flex; justify-content: center; }
+        .hero-image img { width: 100%; max-width: 500px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+
+        /* Dashboard Features Section */
+        .features { padding: 80px 8%; background: #ffffff; text-align: center; }
+        .features h2 { font-size: 32px; font-weight: 700; margin-bottom: 10px; color: #0f172a; }
+        .features p.subtitle { color: #64748b; font-size: 15px; margin-bottom: 50px; }
+        
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; text-align: left; }
+        .feature-card { background: #f8fafc; padding: 30px; border-radius: 10px; border: 1px solid #e2e8f0; transition: 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-color: #cbd5e1; }
+        .feature-card i { font-size: 28px; color: #2874f0; margin-bottom: 20px; background: #e0f2fe; padding: 15px; border-radius: 8px; }
+        .feature-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 10px; color: #0f172a; }
+        .feature-card p { font-size: 14px; color: #64748b; line-height: 1.5; }
+
+        /* ==================================================
+            PROFESSIONAL FOOTER CSS (Taken from Profile Code)
+        ================================================== */
+        .professional-footer {
+            background-color: #172337;
+            color: #ffffff;
+            padding: 60px 0 0 0;
+            margin-top: 60px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer-container {
+            width: 96%;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            padding-bottom: 50px;
+        }
+
+        .footer-col .footer-logo h2 {
+            font-size: 28px;
+            font-style: italic;
+            margin-bottom: 15px;
+            color: #2874f0;
+            font-weight: 800;
+        }
+        .footer-col .footer-logo span {
+            color: #ff9f00;
+        }
+        .footer-col p {
+            font-size: 14px;
+            color: #878787;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            height: 36px;
+            width: 36px;
+            background-color: #ffffff1a;
+            margin-right: 10px;
+            text-align: center;
+            line-height: 36px;
+            border-radius: 50%;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .social-links a:hover {
+            background-color: #2874f0;
+            transform: translateY(-3px);
+        }
+
+        .footer-col h3 {
+            font-size: 18px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            position: relative;
+            color: #ffffff;
+        }
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            background-color: #2874f0;
+            height: 2px;
+            width: 40px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 15px;
+        }
+        .footer-col ul li a {
+            font-size: 14px;
+            color: #878787;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .footer-col ul li a:hover {
+            color: #ffffff;
+            padding-left: 6px;
+        }
+
+        .subscribe-box {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+        .subscribe-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            font-size: 14px;
+            background: #ffffff;
+        }
+        .subscribe-box button {
+            padding: 12px 18px;
+            background-color: #ff9f00;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .subscribe-box button:hover {
+            background-color: #e68f00;
+        }
+
+        .footer-bottom {
+            background-color: #0b1423;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer-bottom p {
+            font-size: 13px;
+            color: #878787;
+            margin: 0;
+        }
+        .payment-icons i {
+            font-size: 24px;
+            color: #878787;
+            margin-left: 12px;
+            transition: 0.3s;
+        }
+        .payment-icons i:hover {
+            color: #ffffff;
+        }
+
+        /* Login Modal Popup */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000;
+            justify-content: center; align-items: center;
+        }
+        .modal-box {
+            background: #ffffff; width: 100%; max-width: 400px; padding: 40px; border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative; animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .modal-close { position: absolute; top: 20px; right: 20px; font-size: 20px; cursor: pointer; color: #64748b; }
+        .modal-close:hover { color: #0f172a; }
+        
+        .modal-box h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #0f172a; }
+        .modal-box p { font-size: 14px; color: #64748b; margin-bottom: 25px; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #334155; }
+        .form-group input { width: 100%; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; transition: 0.3s; }
+        .form-group input:focus { border-color: #2874f0; box-shadow: 0 0 0 3px rgba(40,116,240,0.15); }
+        
+        .btn-submit { width: 100%; background: #2874f0; color: #fff; padding: 14px; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-submit:hover { background: #1d5ed8; }
+
+        @media(max-width: 900px) {
+            .footer-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">
+            <h2>Vizo<span>ra</span></h2>
+            <small>See Beyond Style</small>
+        </div>
+        <div class="nav-right">
+            <button class="btn-login-nav" onclick="openLoginModal()">Admin Login</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Manage Your E-Commerce Ecosystem with <span>Precision</span></h1>
+            <p>Welcome to the Vizora Admin Control Center. Oversee products, track customer analytics, manage orders, and control inventory seamlessly from a unified dashboard.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="openLoginModal()"><i class="fa-solid fa-lock"></i> Access Dashboard</button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <h3>100%</h3>
+                    <p>Secure Control</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Real-Time</h3>
+                    <p>Data Analytics</p>
+                </div>
+                <div class="stat-item">
+                    <h3>24/7</h3>
+                    <p>System Uptime</p>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Admin Dashboard Preview">
+        </div>
+    </section>
+
+    <!-- Admin Features Section -->
+    <section class="features">
+        <h2>Powerful Admin Capabilities</h2>
+        <p class="subtitle">Everything you need to run and scale your operations smoothly.</p>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <i class="fa-solid fa-box-open"></i>
+                <h3>Product & Inventory</h3>
+                <p>Add, edit, or remove products instantly. Manage stock levels and update image categories with ease.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-chart-line"></i>
+                <h3>Sales & Analytics</h3>
+                <p>Monitor revenue trends, check daily active orders, and analyze customer purchasing preferences.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-users-gear"></i>
+                <h3>User Management</h3>
+                <p>Manage registered customer profiles, handle securely authenticated accounts, and review status logs.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Professional Footer (Matched exactly with Profile style) -->
+    <footer class="professional-footer">
+        <div class="footer-container">
+            
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <h2>Vizo<span>ra</span></h2>
+                </div>
+                <p>Enterprise-grade administrative control panel for seamless e-commerce management, inventory tracking, and secure oversight.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#" onclick="openLoginModal()">Admin Sign In</a></li>
+                    <li><a href="index.html">Main Storefront</a></li>
+                    <li><a href="#">System Status</a></li>
+                    <li><a href="#">API Documentation</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Security & Access</h3>
+                <ul>
+                    <li><a href="#">Access Logs</a></li>
+                    <li><a href="#">Privacy Protocols</a></li>
+                    <li><a href="#">Authorized Only</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Admin Newsletter</h3>
+                <p>Subscribe to get system updates, security patches, and platform alerts.</p>
+                <div class="subscribe-box">
+                    <input type="email" placeholder="Enter admin email">
+                    <button><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 Vizora. All Rights Reserved. Restricted Area.</p>
+            <div class="payment-icons">
+                <i class="fa-brands fa-cc-visa"></i>
+                <i class="fa-brands fa-cc-mastercard"></i>
+                <i class="fa-brands fa-cc-paypal"></i>
+                <i class="fa-brands fa-cc-amazon-pay"></i>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal Popup -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <span class="modal-close" onclick="closeLoginModal()">&times;</span>
+            <h2>Admin Sign In</h2>
+            <p>Enter your credentials to access the secure control panel.</p>
+            
+            <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+                <div class="form-group">
+                    <label>Admin Email</label>
+                    <input type="email" id="adminEmail" placeholder="admin@vizora.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="adminPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-submit">Login to Dashboard</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript for Modal & Login action -->
+    <script>
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('loginModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('adminEmail').value;
+            const pass = document.getElementById('adminPassword').value;
+
+            if(email === "admin@vizora.com" && pass === "admin123") {
+                localStorage.setItem("adminLoggedIn", "true");
+                alert("Login Successful! Redirecting to Dashboard...");
+                window.location.href = "dashboard.html";
+            } else {
+                alert("Invalid Admin Credentials! Please try again.");
+            }
+        }
+    </script>
+</body>
+</html>
