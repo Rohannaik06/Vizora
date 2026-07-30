@@ -47,7 +47,7 @@
         .header-left { display: flex; align-items: center; gap: 20px; }
         .toggle-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-main); }
         
-        .logo { cursor: pointer; }
+        .logo { cursor: pointer; text-decoration: none; }
         .logo h2 { font-size: 24px; color: var(--primary); font-weight: 800; font-style: italic; margin: 0; }
         .logo span { color: var(--accent); }
         .logo small { color: var(--text-secondary); font-size: 10px; font-weight: 600; display: block; letter-spacing: 0.5px; }
@@ -72,7 +72,6 @@
             transition: var(--transition); z-index: 900;
         }
         
-        /* Collapsed State via Class */
         aside.collapsed { width: var(--sidebar-collapsed); }
         aside.collapsed .nav-text, aside.collapsed .menu-header { display: none; }
         aside.collapsed .nav-link { justify-content: center; padding: 12px; }
@@ -95,10 +94,6 @@
             height: calc(100vh - var(--header-height)); padding: 30px; overflow-y: auto; transition: var(--transition);
         }
         main.expanded { margin-left: var(--sidebar-collapsed); width: calc(100% - var(--sidebar-collapsed)); }
-
-        .tab-content { display: none; animation: fadeIn 0.3s ease; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         .page-title { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
 
@@ -126,10 +121,10 @@
     <header>
         <div class="header-left">
             <button class="toggle-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-            <div class="logo" onclick="switchTab('dashboard', event)">
+            <a href="dashboard.html" class="logo">
                 <h2>Vizo<span>ra</span></h2>
                 <small>See Beyond Style</small>
-            </div>
+            </a>
         </div>
 
         <div class="header-right">
@@ -147,18 +142,18 @@
         </div>
     </header>
 
-    <!-- Sidebar Aside (Hover removed completely) -->
+    <!-- Sidebar Aside -->
     <aside id="sidebar">
         <ul class="nav-links">
             <div class="menu-header">Main Menu</div>
-            <li><a class="nav-link active" onclick="switchTab('dashboard', this)"><i class="fa-solid fa-chart-pie"></i><span class="nav-text">Dashboard</span></a></li>
-            <li><a class="nav-link" onclick="switchTab('products', this)"><i class="fa-solid fa-box-open"></i><span class="nav-text">Products Catalog</span></a></li>
-            <li><a class="nav-link" onclick="switchTab('orders', this)"><i class="fa-solid fa-shopping-bag"></i><span class="nav-text">Orders Tracking</span></a></li>
-            <li><a class="nav-link" onclick="switchTab('users', this)"><i class="fa-solid fa-users"></i><span class="nav-text">Users Management</span></a></li>
+            <li><a class="nav-link active" href="dashboard.html"><i class="fa-solid fa-chart-pie"></i><span class="nav-text">Dashboard</span></a></li>
+            <li><a class="nav-link" href="products.html"><i class="fa-solid fa-box-open"></i><span class="nav-text">Products Catalog</span></a></li>
+            <li><a class="nav-link" href="orders.html"><i class="fa-solid fa-shopping-bag"></i><span class="nav-text">Orders Tracking</span></a></li>
+            <li><a class="nav-link" href="users.html"><i class="fa-solid fa-users"></i><span class="nav-text">Users Management</span></a></li>
             
             <div class="menu-header">System</div>
-            <li><a class="nav-link" onclick="switchTab('analytics', this)"><i class="fa-solid fa-chart-line"></i><span class="nav-text">Analytics</span></a></li>
-            <li><a class="nav-link" onclick="switchTab('settings', this)"><i class="fa-solid fa-gear"></i><span class="nav-text">Settings</span></a></li>
+            <li><a class="nav-link" href="analytics.html"><i class="fa-solid fa-chart-line"></i><span class="nav-text">Analytics</span></a></li>
+            <li><a class="nav-link" href="settings.html"><i class="fa-solid fa-gear"></i><span class="nav-text">Settings</span></a></li>
         </ul>
         
         <div style="font-size: 11px; color: var(--text-secondary); text-align: center; padding-bottom: 10px;" class="nav-text">
@@ -166,119 +161,44 @@
         </div>
     </aside>
 
-    <!-- Main Content Dynamic Tabs -->
+    <!-- Main Content -->
     <main id="mainContent">
+        <h2 class="page-title">Dashboard Overview</h2>
         
-        <!-- 1. DASHBOARD TAB -->
-        <div id="dashboard" class="tab-content active">
-            <h2 class="page-title">Dashboard Overview</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Total Revenue</h3>
-                    <div class="value">₹1,42,800</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Active Orders</h3>
-                    <div class="value">38</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Total Products</h3>
-                    <div class="value">24</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Registered Users</h3>
-                    <div class="value">512</div>
-                </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Revenue</h3>
+                <div class="value" id="totalRevenue">₹0</div>
             </div>
-            <div class="data-table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Product</th>
-                            <th>Status</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#VZ-1089</td>
-                            <td>Rahul Sharma</td>
-                            <td>Ray-Ban Aviator</td>
-                            <td><span class="badge active">Completed</span></td>
-                            <td>₹4,890</td>
-                        </tr>
-                        <tr>
-                            <td>#VZ-1090</td>
-                            <td>Priya Patel</td>
-                            <td>Fastrack Wayfarer</td>
-                            <td><span class="badge pending">Processing</span></td>
-                            <td>₹1,499</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="stat-card">
+                <h3>Total Orders</h3>
+                <div class="value" id="activeOrders">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Products</h3>
+                <div class="value" id="totalProducts">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Registered Users</h3>
+                <div class="value" id="registeredUsers">0</div>
             </div>
         </div>
 
-        <!-- 2. PRODUCTS TAB -->
-        <div id="products" class="tab-content">
-            <h2 class="page-title">Products Inventory Management</h2>
-            <div class="data-table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Product Name</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Stock</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Ray-Ban Classic Aviator</td>
-                            <td>Aviator</td>
-                            <td>₹4,890</td>
-                            <td>50</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Fastrack UV Wayfarer</td>
-                            <td>Wayfarer</td>
-                            <td>₹1,499</td>
-                            <td>100</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="data-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="dashboardTableBody">
+                    <tr><td colspan="4" style="text-align:center;">Loading database records...</td></tr>
+                </tbody>
+            </table>
         </div>
-
-        <!-- 3. ORDERS TAB -->
-        <div id="orders" class="tab-content">
-            <h2 class="page-title">Customer Orders Management</h2>
-            <p style="color: var(--text-secondary);">Manage all delivery updates, returns, and real-time shipping logs here.</p>
-        </div>
-
-        <!-- 4. USERS TAB -->
-        <div id="users" class="tab-content">
-            <h2 class="page-title">Registered Store Users</h2>
-            <p style="color: var(--text-secondary);">View active customer accounts and authorization statuses.</p>
-        </div>
-
-        <!-- 5. ANALYTICS TAB -->
-        <div id="analytics" class="tab-content">
-            <h2 class="page-title">Traffic & Sales Analytics</h2>
-            <p style="color: var(--text-secondary);">Real-time performance graphs and data metrics will appear here.</p>
-        </div>
-
-        <!-- 6. SETTINGS TAB -->
-        <div id="settings" class="tab-content">
-            <h2 class="page-title">System Settings & Configurations</h2>
-            <p style="color: var(--text-secondary);">Update database connection parameters and administrator profiles.</p>
-        </div>
-
     </main>
 
     <!-- JavaScript Actions -->
@@ -289,18 +209,52 @@
             window.location.href = "admin.html";
         }
 
-        // Tab Switching Logic
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-
-            document.getElementById(tabId).classList.add('active');
-            if(element && element.tagName === 'A') {
-                element.classList.add('active');
+        // Fetch Dashboard Stats from Database on Page Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('vizora_theme');
+            if(savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                document.getElementById('themeIcon').className = 'fa-solid fa-sun';
             }
-        }
 
-        // Sidebar Toggle Click (Only works via Hamburger click now)
+            // Call Servlet
+            fetch('/VIZORA/DashboardStatsServlet')
+            .then(res => res.json())
+            .then(data => {
+                // Update Cards
+                document.getElementById('totalRevenue').innerText = "₹" + (data.totalRevenue ? data.totalRevenue.toLocaleString('en-IN') : 0);
+                document.getElementById('activeOrders').innerText = data.totalOrders || 0;
+                document.getElementById('totalProducts').innerText = data.totalProducts || 0;
+                document.getElementById('registeredUsers').innerText = data.totalUsers || 0;
+
+                // Update Table Rows
+                let tableHtml = "";
+                if(data.recentOrders && data.recentOrders.length > 0) {
+                    data.recentOrders.forEach(order => {
+                        let badgeClass = "pending";
+                        if(order.status === "DELIVERED" || order.status === "CONFIRMED") badgeClass = "active";
+
+                        tableHtml += `
+                            <tr>
+                                <td>#VZ-${order.orderId}</td>
+                                <td>${order.customer}</td>
+                                <td>₹${order.amount}</td>
+                                <td><span class="badge ${badgeClass}">${order.status}</span></td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tableHtml = `<tr><td colspan="4" style="text-align:center;">No recent orders found in database.</td></tr>`;
+                }
+                document.getElementById('dashboardTableBody').innerHTML = tableHtml;
+            })
+            .catch(err => {
+                console.error("Error loading dashboard data:", err);
+                document.getElementById('dashboardTableBody').innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Failed to load data from server.</td></tr>`;
+            });
+        });
+
+        // Sidebar Toggle Click
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const main = document.getElementById('mainContent');
@@ -322,15 +276,6 @@
                 localStorage.setItem('vizora_theme', 'light');
             }
         }
-
-        // Retain Theme on load
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('vizora_theme');
-            if(savedTheme === 'dark') {
-                document.body.setAttribute('data-theme', 'dark');
-                document.getElementById('themeIcon').className = 'fa-solid fa-sun';
-            }
-        });
 
         // Logout Secure Action
         function logout() {
