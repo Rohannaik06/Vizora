@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
 @WebServlet("/OrderServlet")
 public class OrderServlet extends HttpServlet {
 
@@ -38,14 +37,16 @@ public class OrderServlet extends HttpServlet {
 
             try (Connection con = DBConnection.getConnection()) {
                 
-                // 2. Securely fetch the real price from the products table
+                // 2. Securely fetch the real price and current stock from the products table
                 double realPrice = 0.0;
-                String priceSql = "SELECT selling_price FROM products WHERE product_id = ?";
+                int currentStock = 0;
+                String priceSql = "SELECT selling_price, stock FROM products WHERE product_id = ?";
                 try (PreparedStatement pricePs = con.prepareStatement(priceSql)) {
                     pricePs.setInt(1, productId);
                     try (ResultSet rs = pricePs.executeQuery()) {
                         if (rs.next()) {
                             realPrice = rs.getDouble("selling_price");
+                            currentStock = rs.getInt("stock");
                         } else {
                             out.print("error: product not found");
                             return;
@@ -53,10 +54,15 @@ public class OrderServlet extends HttpServlet {
                     }
                 }
 
+                // Check if stock is available
+                if (currentStock <= 0) {
+                    out.print("error: product is out of stock");
+                    return;
+                }
+
                 // 3. Insert into `orders` table
                 String orderSql = "INSERT INTO orders (user_id, full_name, mobile, pincode, locality, address, city, state, payment_method, total_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 
-                // Statement.RETURN_GENERATED_KEYS allows us to get the new order_id instantly
                 try (PreparedStatement orderPs = con.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS)) {
                     orderPs.setInt(1, userId);
                     orderPs.setString(2, fullName);
@@ -85,8 +91,16 @@ public class OrderServlet extends HttpServlet {
                                     itemPs.setDouble(3, realPrice);
                                     
                                     itemPs.executeUpdate();
-                                    out.print("success");
                                 }
+
+                                // 6. REDUCE PRODUCT QUANTITY FROM DATABASE (STOCK - 1)
+                                String reduceStockSql = "UPDATE products SET stock = stock - 1 WHERE product_id = ?";
+                                try (PreparedStatement stockPs = con.prepareStatement(reduceStockSql)) {
+                                    stockPs.setInt(1, productId);
+                                    stockPs.executeUpdate();
+                                }
+
+                                out.print("success");
                             }
                         }
                     } else {
