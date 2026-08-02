@@ -1,3 +1,4 @@
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -14,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/AdminProductServlet")
 public class AdminProductServlet extends HttpServlet {
 
-    // प्रॉडक्ट्स डेटाबेसवरून फेच करण्यासाठी (GET)
+    // १. प्रॉडक्ट्स डेटाबेसवरून फेच करण्यासाठी (GET)
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -26,7 +27,6 @@ public class AdminProductServlet extends HttpServlet {
         StringBuilder jsonBuilder = new StringBuilder();
         jsonBuilder.append("[");
 
-        // स्टॉकनुसार चढत्या क्रमाने (Min to Max) सॉर्ट करून डेटा फेच करणे
         String sql = "SELECT * FROM products ORDER BY stock ASC";
 
         try (Connection con = DBConnection.getConnection();
@@ -66,7 +66,7 @@ public class AdminProductServlet extends HttpServlet {
         out.print(jsonBuilder.toString());
     }
 
-    // नवीन प्रॉडक्ट डेटाबेसमध्ये ॲड करण्यासाठी (POST)
+    // २. स्मार्ट ॲड प्रॉडक्ट (जर आधीपासून असेल तर स्टॉक प्लस होणार, अन्यथा नवीन इन्सर्ट) (POST)
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -75,49 +75,114 @@ public class AdminProductServlet extends HttpServlet {
 
         String name = request.getParameter("product_name");
         String brand = request.getParameter("brand");
-        String category = request.getParameter("category");
-        String gender = request.getParameter("gender");
-        String description = request.getParameter("description");
-        double origPrice = Double.parseDouble(request.getParameter("original_price"));
-        double sellPrice = Double.parseDouble(request.getParameter("selling_price"));
-        int stock = Integer.parseInt(request.getParameter("stock"));
-        String status = request.getParameter("status");
-        String thumbnail = request.getParameter("thumbnail");
-        String img1 = request.getParameter("image_1");
-        String img2 = request.getParameter("image_2");
-        String img3 = request.getParameter("image_3");
-        String img4 = request.getParameter("image_4");
+        int newStock = Integer.parseInt(request.getParameter("stock"));
 
-        String sql = "INSERT INTO products (product_name, brand, category, gender, description, original_price, selling_price, stock, status, thumbnail, image_1, image_2, image_3, image_4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setString(1, name);
-            ps.setString(2, brand);
-            ps.setString(3, category);
-            ps.setString(4, gender);
-            ps.setString(5, description);
-            ps.setDouble(6, origPrice);
-            ps.setDouble(7, sellPrice);
-            ps.setInt(8, stock);
-            ps.setString(9, status);
-            ps.setString(10, thumbnail);
-            ps.setString(11, img1);
-            ps.setString(12, img2);
-            ps.setString(13, img3);
-            ps.setString(14, img4);
-
-            int rows = ps.executeUpdate();
-            if (rows > 0) {
-                response.sendRedirect("AdminProducts.html"); // यशस्वीरीत्या ॲड झाल्यावर पुन्हा पेजवर येणे
-            } else {
-                response.getWriter().println("Failed to add product.");
+        try (Connection con = DBConnection.getConnection()) {
+            
+            // प्रॉडक्ट आधीपासून आहे का चेक करणे
+            String checkSql = "SELECT product_id FROM products WHERE product_name = ? AND brand = ?";
+            try (PreparedStatement checkPs = con.prepareStatement(checkSql)) {
+                checkPs.setString(1, name);
+                checkPs.setString(2, brand);
+                
+                try (ResultSet rs = checkPs.executeQuery()) {
+                    if (rs.next()) {
+                        // प्रॉडक्ट उपलब्ध आहे -> फक्त स्टॉक अपडेट करणे
+                        int existingId = rs.getInt("product_id");
+                        String updateStockSql = "UPDATE products SET stock = stock + ? WHERE product_id = ?";
+                        try (PreparedStatement updatePs = con.prepareStatement(updateStockSql)) {
+                            updatePs.setInt(1, newStock);
+                            updatePs.setInt(2, existingId);
+                            updatePs.executeUpdate();
+                        }
+                    } else {
+                        // नवीन प्रॉडक्ट आहे -> नवीन इन्सर्ट करणे
+                        String insertSql = "INSERT INTO products (product_name, brand, category, gender, description, original_price, selling_price, stock, status, thumbnail, image_1, image_2, image_3, image_4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        try (PreparedStatement insertPs = con.prepareStatement(insertSql)) {
+                            insertPs.setString(1, name);
+                            insertPs.setString(2, brand);
+                            insertPs.setString(3, request.getParameter("category"));
+                            insertPs.setString(4, request.getParameter("gender"));
+                            insertPs.setString(5, request.getParameter("description"));
+                            insertPs.setDouble(6, Double.parseDouble(request.getParameter("original_price")));
+                            insertPs.setDouble(7, Double.parseDouble(request.getParameter("selling_price")));
+                            insertPs.setInt(8, newStock);
+                            insertPs.setString(9, request.getParameter("status"));
+                            insertPs.setString(10, request.getParameter("thumbnail"));
+                            insertPs.setString(11, request.getParameter("image_1"));
+                            insertPs.setString(12, request.getParameter("image_2"));
+                            insertPs.setString(13, request.getParameter("image_3"));
+                            insertPs.setString(14, request.getParameter("image_4"));
+                            
+                            insertPs.executeUpdate();
+                        }
+                    }
+                }
             }
+            response.sendRedirect("AdminProducts.html");
 
         } catch (Exception e) {
             e.printStackTrace();
             response.getWriter().println("Error: " + e.getMessage());
+        }
+    }
+
+    // ३. टेबलमधील स्टॉक (+1 किंवा -1) अपडेट करण्यासाठी (PUT)
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
+        BufferedReader reader = request.getReader();
+        String line = reader.readLine();
+        int productId = 0;
+        int change = 0;
+
+        if (line != null) {
+            String[] pairs = line.split("&");
+            for (String pair : pairs) {
+                String[] keyValue = pair.split("=");
+                if (keyValue.length > 1) {
+                    if (keyValue[0].equals("productId")) productId = Integer.parseInt(keyValue[1]);
+                    if (keyValue[0].equals("change")) change = Integer.parseInt(keyValue[1]);
+                }
+            }
+        }
+
+        try (Connection con = DBConnection.getConnection()) {
+            // स्टॉक झिरोच्या खाली जाऊ नये म्हणून GREATEST वापरले आहे
+            String sql = "UPDATE products SET stock = GREATEST(0, stock + ?) WHERE product_id = ?";
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, change);
+                ps.setInt(2, productId);
+                ps.executeUpdate();
+                response.getWriter().print("success");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().print("error");
+        }
+    }
+
+    // ४. प्रॉडक्ट पूर्णपणे डिलीट करण्यासाठी (DELETE)
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
+        String productIdStr = request.getParameter("productId");
+        if (productIdStr != null) {
+            int productId = Integer.parseInt(productIdStr);
+
+            try (Connection con = DBConnection.getConnection()) {
+                String sql = "DELETE FROM products WHERE product_id = ?";
+                try (PreparedStatement ps = con.prepareStatement(sql)) {
+                    ps.setInt(1, productId);
+                    ps.executeUpdate();
+                    response.getWriter().print("success");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.getWriter().print("error");
+            }
         }
     }
 
