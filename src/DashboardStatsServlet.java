@@ -23,6 +23,8 @@ public class DashboardStatsServlet extends HttpServlet {
 
         double totalRevenue = 0;
         int totalOrders = 0;
+        int confirmedOrders = 0;
+        int cancelledOrders = 0;
         int totalProducts = 0;
         int totalUsers = 0;
 
@@ -32,22 +34,31 @@ public class DashboardStatsServlet extends HttpServlet {
         try (Connection con = DBConnection.getConnection();
              Statement st = con.createStatement()) {
 
-            // १. टोटल रेव्हेन्यू आणि ऑर्डर्सची संख्या मोजणे
-            ResultSet rsOrders = st.executeQuery("SELECT SUM(total_amount) AS revenue, COUNT(*) AS count FROM orders");
+            // १. एकाच SQL क्वेरीमध्ये Revenue आणि Orders (Total, Confirmed, Cancelled) चे सर्व कॅल्क्युलेशन करणे (Professional Approach)
+            String statsSql = "SELECT " +
+                              "SUM(CASE WHEN order_status != 'CANCELLED' THEN total_amount ELSE 0 END) AS revenue, " +
+                              "COUNT(*) AS total_count, " +
+                              "SUM(CASE WHEN order_status = 'CONFIRMED' OR order_status = 'DELIVERED' THEN 1 ELSE 0 END) AS confirmed_count, " +
+                              "SUM(CASE WHEN order_status = 'CANCELLED' THEN 1 ELSE 0 END) AS cancelled_count " +
+                              "FROM orders";
+                              
+            ResultSet rsOrders = st.executeQuery(statsSql);
             if (rsOrders.next()) {
                 totalRevenue = rsOrders.getDouble("revenue");
-                totalOrders = rsOrders.getInt("count");
+                totalOrders = rsOrders.getInt("total_count");
+                confirmedOrders = rsOrders.getInt("confirmed_count");
+                cancelledOrders = rsOrders.getInt("cancelled_count");
             }
             rsOrders.close();
 
-            // २. प्रॉडक्ट्सची संख्या मोजणे
+            // २. प्रॉडक्ट्सची एकूण संख्या
             ResultSet rsProd = st.executeQuery("SELECT COUNT(*) AS count FROM products");
             if (rsProd.next()) {
                 totalProducts = rsProd.getInt("count");
             }
             rsProd.close();
 
-            // ३. युजर्सची संख्या मोजणे (जर तुमचे युजर्स टेबल असेल तर, नसल्यास 0 ठेवू शकता)
+            // ३. युजर्सची एकूण संख्या
             try {
                 ResultSet rsUsers = st.executeQuery("SELECT COUNT(*) AS count FROM users");
                 if (rsUsers.next()) {
@@ -55,11 +66,19 @@ public class DashboardStatsServlet extends HttpServlet {
                 }
                 rsUsers.close();
             } catch (Exception e) {
-                totalUsers = 0; // युजर टेबल नसले तरी एरर येणार नाही
+                totalUsers = 0; 
             }
 
-            // ४. डॅशबोर्ड टेबलसाठी शेवटच्या ५ ऑर्डर्स फेच करणे
-            ResultSet rsList = st.executeQuery("SELECT order_id, full_name, total_amount, order_status FROM orders ORDER BY order_date DESC LIMIT 5");
+            // ४. डॅशबोर्ड टेबलसाठी फक्त टॉप १० अलीकडील ऑर्डर्स फेच करणे (LIMIT 10)
+            String detailedOrdersQuery = 
+                "SELECT o.order_id, o.full_name, o.mobile, o.payment_method, o.total_amount, o.order_status, " +
+                "p.product_name, p.brand, oi.quantity " +
+                "FROM orders o " +
+                "LEFT JOIN order_items oi ON o.order_id = oi.order_id " +
+                "LEFT JOIN products p ON oi.product_id = p.product_id " +
+                "ORDER BY o.order_date DESC LIMIT 10";
+
+            ResultSet rsList = st.executeQuery(detailedOrdersQuery);
             boolean first = true;
             while (rsList.next()) {
                 if (!first) {
@@ -70,6 +89,11 @@ public class DashboardStatsServlet extends HttpServlet {
                 ordersJson.append("{");
                 ordersJson.append("\"orderId\":").append(rsList.getInt("order_id")).append(",");
                 ordersJson.append("\"customer\":\"").append(escapeJson(rsList.getString("full_name"))).append("\",");
+                ordersJson.append("\"mobile\":\"").append(escapeJson(rsList.getString("mobile"))).append("\",");
+                ordersJson.append("\"productName\":\"").append(escapeJson(rsList.getString("product_name"))).append("\",");
+                ordersJson.append("\"brand\":\"").append(escapeJson(rsList.getString("brand"))).append("\",");
+                ordersJson.append("\"quantity\":").append(rsList.getInt("quantity")).append(",");
+                ordersJson.append("\"paymentMethod\":\"").append(escapeJson(rsList.getString("payment_method"))).append("\",");
                 ordersJson.append("\"amount\":").append(rsList.getDouble("total_amount")).append(",");
                 ordersJson.append("\"status\":\"").append(escapeJson(rsList.getString("order_status"))).append("\"");
                 ordersJson.append("}");
@@ -82,10 +106,10 @@ public class DashboardStatsServlet extends HttpServlet {
 
         ordersJson.append("]");
 
-        // ५. मुख्य JSON पॅकेज तयार करून पाठवणे
+        // ५. JSON पॅकेजमध्ये नवीन variables ॲड करणे
         String finalJson = String.format(java.util.Locale.US,
-            "{\"totalRevenue\":%.2f, \"totalOrders\":%d, \"totalProducts\":%d, \"totalUsers\":%d, \"recentOrders\":%s}",
-            totalRevenue, totalOrders, totalProducts, totalUsers, ordersJson.toString()
+            "{\"totalRevenue\":%.2f, \"totalOrders\":%d, \"confirmedOrders\":%d, \"cancelledOrders\":%d, \"totalProducts\":%d, \"totalUsers\":%d, \"recentOrders\":%s}",
+            totalRevenue, totalOrders, confirmedOrders, cancelledOrders, totalProducts, totalUsers, ordersJson.toString()
         );
 
         out.print(finalJson);
