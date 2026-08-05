@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vizora Admin | Orders Tracking & Management</title>
+    <title>Vizora Admin | Users Management</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -95,11 +95,10 @@
         }
         main.expanded { margin-left: var(--sidebar-collapsed); width: calc(100% - var(--sidebar-collapsed)); }
 
-        /* Professional Top Flex: Title left & Big Search Bar right */
         .page-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
         .page-title { font-size: 24px; font-weight: 700; margin: 0; }
 
-        /* Big & Professional Right-side Search Box */
+        /* Search Box */
         .search-box { position: relative; width: 340px; }
         .search-box input {
             width: 100%; padding: 11px 18px 11px 42px; border-radius: 25px; border: 1px solid var(--border-color);
@@ -109,31 +108,19 @@
         .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(40,116,240,0.25); }
         .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 15px; }
 
-        /* Centered Filter Navbar with Clean Spacing */
-        .filter-navbar { display: flex; gap: 12px; margin-bottom: 30px; align-items: center; justify-content: center; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; flex-wrap: wrap; }
-        .filter-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 9px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .filter-btn:hover, .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 10px rgba(40,116,240,0.2); }
-
         /* Data Tables Container */
         .data-table-container { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--border-color); overflow-x: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.02); margin-bottom: 40px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 1250px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 1000px; }
         th, td { padding: 15px 18px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
         th { background: rgba(0,0,0,0.02); font-weight: 600; color: var(--text-secondary); }
         [data-theme="dark"] th { background: rgba(255,255,255,0.02); }
         
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
-        .badge.confirmed { background: #dcfce7; color: #15803d; }
-        .badge.shipped { background: #fef3c7; color: #d97706; }
-        .badge.delivered { background: #e0f2fe; color: #0369a1; }
-        .badge.pending { background: #fef9c3; color: #a16207; }
-        .badge.cancelled { background: #fee2e2; color: #991b1b; }
-
-        /* Action Select Dropdown */
-        .action-select {
-            padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color);
-            background: var(--bg-main); color: var(--text-main); font-size: 12px; font-weight: 600; cursor: pointer; outline: none;
-        }
-        .action-select:focus { border-color: var(--primary); }
+        .badge.active { background: #dcfce7; color: #15803d; }
+        
+        /* Action Button */
+        .btn-delete { background: #fee2e2; color: #991b1b; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-delete:hover { background: #dc2626; color: #fff; }
     </style>
 </head>
 <body data-theme="light">
@@ -169,8 +156,8 @@
             <div class="menu-header">Main Menu</div>
             <li><a class="nav-link" href="dashboard.html"><i class="fa-solid fa-chart-pie"></i><span class="nav-text">Dashboard</span></a></li>
             <li><a class="nav-link" href="AdminProducts.html"><i class="fa-solid fa-box-open"></i><span class="nav-text">Products Catalog</span></a></li>
-            <li><a class="nav-link active" href="AdminOrders.html"><i class="fa-solid fa-shopping-bag"></i><span class="nav-text">Orders Tracking</span></a></li>
-            <li><a class="nav-link" href="AdminUsers.html"><i class="fa-solid fa-users"></i><span class="nav-text">Users Management</span></a></li>
+            <li><a class="nav-link" href="AdminOrders.html"><i class="fa-solid fa-shopping-bag"></i><span class="nav-text">Orders Tracking</span></a></li>
+            <li><a class="nav-link active" href="AdminUsers.html"><i class="fa-solid fa-users"></i><span class="nav-text">Users Management</span></a></li>
             
             <div class="menu-header">System</div>
             <li><a class="nav-link" href="analytics.html"><i class="fa-solid fa-chart-line"></i><span class="nav-text">Analytics</span></a></li>
@@ -184,43 +171,29 @@
 
     <!-- Main Content -->
     <main id="mainContent">
-        <!-- Top Header with Title and Right-aligned Professional Search Bar -->
         <div class="page-header-flex">
-            <h2 class="page-title">Enterprise Orders Tracking</h2>
+            <h2 class="page-title">Registered Users Management</h2>
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="orderSearchInput" placeholder="Search customer, mobile, ID..." onkeyup="searchOrders()">
+                <input type="text" id="userSearchInput" placeholder="Search by name, email or mobile..." onkeyup="searchUsers()">
             </div>
         </div>
 
-        <!-- Centered Filter Navbar with Shipped Option -->
-        <div class="filter-navbar">
-            <button class="filter-btn active" onclick="filterOrders('ALL', this)">All Orders</button>
-            <button class="filter-btn" onclick="filterOrders('PENDING', this)">Pending</button>
-            <button class="filter-btn" onclick="filterOrders('CONFIRMED', this)">Confirmed</button>
-            <button class="filter-btn" onclick="filterOrders('SHIPPED', this)">Shipped</button>
-            <button class="filter-btn" onclick="filterOrders('DELIVERED', this)">Delivered</button>
-            <button class="filter-btn" onclick="filterOrders('CANCELLED', this)">Cancelled</button>
-        </div>
-
-        <!-- Master Orders Table -->
+        <!-- Master Users Table -->
         <div class="data-table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Order ID</th>
-                        <th>Customer & Mobile</th>
-                        <th>Shipping Address</th>
-                        <th>Product & Brand</th>
-                        <th>Qty</th>
-                        <th>Payment</th>
-                        <th>Amount</th>
-                        <th>Status</th>
+                        <th>User ID</th>
+                        <th>Full Name</th>
+                        <th>Email Address</th>
+                        <th>Mobile Number</th>
+                        <th>Account Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="ordersTableBody">
-                    <tr><td colspan="9" style="text-align:center;">Loading enterprise orders...</td></tr>
+                <tbody id="usersTableBody">
+                    <tr><td colspan="6" style="text-align:center;">Loading registered users...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -233,8 +206,7 @@
             window.location.href = "admin.html";
         }
 
-        let masterOrdersList = [];
-        let currentFilter = 'ALL';
+        let masterUsersList = [];
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('vizora_theme');
@@ -252,100 +224,71 @@
             })
             .catch(err => console.error("Error loading admin profile:", err));
 
-            fetchAllOrders();
+            fetchAllUsers();
         });
 
-        function fetchAllOrders() {
-            fetch('/VIZORA/AdminOrdersServlet')
+        function fetchAllUsers() {
+            fetch('/VIZORA/AdminUsersServlet')
             .then(res => res.json())
             .then(data => {
-                masterOrdersList = data || [];
-                renderOrdersTable(masterOrdersList);
+                masterUsersList = data || [];
+                renderUsersTable(masterUsersList);
             })
             .catch(err => {
-                console.error("Error loading orders:", err);
-                document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="9" style="text-align:center; color:red;">Failed to connect to server database.</td></tr>`;
+                console.error("Error loading users:", err);
+                document.getElementById('usersTableBody').innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Failed to connect to server database.</td></tr>`;
             });
         }
 
-        function renderOrdersTable(list) {
+        function renderUsersTable(list) {
             let tableHtml = "";
             if(list && list.length > 0) {
-                list.forEach(order => {
-                    let status = (order.status || "PENDING").toUpperCase();
-                    let badgeClass = "pending";
-                    if(status === "CONFIRMED") badgeClass = "confirmed";
-                    else if(status === "SHIPPED") badgeClass = "shipped";
-                    else if(status === "DELIVERED") badgeClass = "delivered";
-                    else if(status === "CANCELLED") badgeClass = "cancelled";
-
+                list.forEach(user => {
                     tableHtml += `
                         <tr>
-                            <td><b>#VZ-${order.orderId}</b></td>
-                            <td>${order.customer || 'N/A'} <br><small style="color:var(--text-secondary);"><i class="fa-solid fa-phone" style="font-size:10px;"></i> ${order.mobile || 'N/A'}</small></td>
-                            <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis;" title="${order.address || 'N/A'}">${order.address || 'N/A'}</td>
-                            <td><b>${order.productName || 'Eyewear Item'}</b> <br><small style="color:var(--text-secondary);">Brand: ${order.brand || 'Vizora'}</small></td>
-                            <td><span style="background:var(--border-color); padding:2px 8px; border-radius:4px; font-weight:600;">${order.quantity || 1}</span></td>
-                            <td><span style="font-size: 12px; font-weight: 600; color: var(--primary); text-transform:uppercase;">${order.paymentMethod || 'COD'}</span></td>
-                            <td><b>₹${Number(order.amount || 0).toLocaleString('en-IN')}</b></td>
-                            <td><span class="badge ${badgeClass}">${status}</span></td>
+                            <td><b>#USR-${user.userId}</b></td>
+                            <td><i class="fa-solid fa-user" style="color:var(--primary); margin-right:6px; font-size:12px;"></i> ${user.fullName || 'N/A'}</td>
+                            <td>${user.email || 'N/A'}</td>
+                            <td><i class="fa-solid fa-phone" style="font-size:11px; color:var(--text-secondary); margin-right:4px;"></i> ${user.mobile || 'N/A'}</td>
+                            <td><span class="badge active">Active</span></td>
                             <td>
-                                <select class="action-select" onchange="updateOrderStatus(${order.orderId}, this.value)">
-                                    <option value="" disabled selected>Update Status</option>
-                                    <option value="PENDING">Pending</option>
-                                    <option value="CONFIRMED">Confirmed</option>
-                                    <option value="SHIPPED">Shipped</option>
-                                    <option value="DELIVERED">Delivered</option>
-                                    <option value="CANCELLED">Cancelled</option>
-                                </select>
+                                <button class="btn-delete" onclick="deleteUser(${user.userId})"><i class="fa-solid fa-trash"></i> Remove</button>
                             </td>
                         </tr>
                     `;
                 });
             } else {
-                tableHtml = `<tr><td colspan="9" style="text-align:center; color:var(--text-secondary);">No orders found in database.</td></tr>`;
+                tableHtml = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary);">No registered users found.</td></tr>`;
             }
-            document.getElementById('ordersTableBody').innerHTML = tableHtml;
+            document.getElementById('usersTableBody').innerHTML = tableHtml;
         }
 
-        function filterOrders(statusType, btn) {
-            currentFilter = statusType;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-
-            applyFilterAndSearch();
-        }
-
-        function searchOrders() {
-            applyFilterAndSearch();
-        }
-
-        function applyFilterAndSearch() {
-            let query = document.getElementById('orderSearchInput').value.toLowerCase();
-            let filtered = masterOrdersList.filter(o => {
-                let status = (o.status || "").toUpperCase();
-                let matchStatus = (currentFilter === 'ALL' || status === currentFilter);
-                let matchText = (String(o.orderId).includes(query) || (o.customer || "").toLowerCase().includes(query) || (o.mobile || "").toLowerCase().includes(query));
-                return matchStatus && matchText;
+        function searchUsers() {
+            let query = document.getElementById('userSearchInput').value.toLowerCase();
+            let filtered = masterUsersList.filter(u => {
+                return String(u.userId).includes(query) || 
+                       (u.fullName || "").toLowerCase().includes(query) || 
+                       (u.email || "").toLowerCase().includes(query) || 
+                       (u.mobile || "").toLowerCase().includes(query);
             });
-            renderOrdersTable(filtered);
+            renderUsersTable(filtered);
         }
 
-        function updateOrderStatus(orderId, newStatus) {
-            if(!confirm(`Are you sure you want to update order #VZ-${orderId} status to ${newStatus}?`)) return;
+        function deleteUser(userId) {
+            if(!confirm(`Are you sure you want to remove user #USR-${userId}?`)) return;
 
-            fetch('/VIZORA/AdminOrdersServlet', {
+            fetch('/VIZORA/AdminUsersServlet', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `orderId=${orderId}&status=${newStatus}`
+                body: `userId=${userId}`
             })
             .then(res => res.text())
             .then(response => {
                 if(response.trim() === "success") {
-                    alert("Order status updated successfully!");
-                    fetchAllOrders(); 
+                    alert("User removed successfully!");
+                    fetchAllUsers();
                 } else {
-                    alert("Failed to update status on server.");
+                    alert("Failed to remove user on server.");
                 }
             })
             .catch(err => {

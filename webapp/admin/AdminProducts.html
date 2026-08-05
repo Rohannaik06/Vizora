@@ -165,8 +165,8 @@
             <div class="admin-profile">
                 <div class="admin-avatar">A</div>
                 <div class="admin-info">
-                    <h4>Super Admin</h4>
-                    <p>admin@vizora.com</p>
+                    <h4 id="topAdminName">Super Admin</h4>
+                    <p id="topAdminEmail">admin@vizora.com</p>
                 </div>
             </div>
 
@@ -181,11 +181,11 @@
             <li><a class="nav-link" href="dashboard.html"><i class="fa-solid fa-chart-pie"></i><span class="nav-text">Dashboard</span></a></li>
             <li><a class="nav-link active" href="AdminProducts.html"><i class="fa-solid fa-box-open"></i><span class="nav-text">Products Catalog</span></a></li>
             <li><a class="nav-link" href="AdminOrders.html"><i class="fa-solid fa-shopping-bag"></i><span class="nav-text">Orders Tracking</span></a></li>
-            <li><a class="nav-link" href="users.html"><i class="fa-solid fa-users"></i><span class="nav-text">Users Management</span></a></li>
+            <li><a class="nav-link" href="AdminUsers.html"><i class="fa-solid fa-users"></i><span class="nav-text">Users Management</span></a></li>
             
             <div class="menu-header">System</div>
             <li><a class="nav-link" href="analytics.html"><i class="fa-solid fa-chart-line"></i><span class="nav-text">Analytics</span></a></li>
-            <li><a class="nav-link" href="settings.html"><i class="fa-solid fa-gear"></i><span class="nav-text">Settings</span></a></li>
+            <li><a class="nav-link" href="AdminSettings.html"><i class="fa-solid fa-gear"></i><span class="nav-text">Settings</span></a></li>
         </ul>
         
         <div style="font-size: 11px; color: var(--text-secondary); text-align: center; padding-bottom: 10px;" class="nav-text">
@@ -380,6 +380,16 @@
                 document.body.setAttribute('data-theme', 'dark');
                 document.getElementById('themeIcon').className = 'fa-solid fa-sun';
             }
+
+            // ॲडमिन प्रोफाइल डेटाबेसवरून लोड करणे
+            fetch('/VIZORA/AdminProfileServlet')
+            .then(res => res.json())
+            .then(data => {
+                if(data.adminName) document.getElementById('topAdminName').innerText = data.adminName;
+                if(data.adminEmail) document.getElementById('topAdminEmail').innerText = data.adminEmail;
+            })
+            .catch(err => console.error("Error loading admin profile:", err));
+
             loadProductsCatalog();
         });
 

@@ -22,7 +22,7 @@ public class OrderServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-            // 1. Get all details from the frontend
+            // 1. Get all details from the frontend checkout form
             int userId = Integer.parseInt(request.getParameter("userId"));
             int productId = Integer.parseInt(request.getParameter("productId"));
             
@@ -60,8 +60,8 @@ public class OrderServlet extends HttpServlet {
                     return;
                 }
 
-                // 3. Insert into `orders` table
-                String orderSql = "INSERT INTO orders (user_id, full_name, mobile, pincode, locality, address, city, state, payment_method, total_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                // 3. Insert into `orders` table with explicit 'PENDING' status (Industry Standard Flow)
+                String orderSql = "INSERT INTO orders (user_id, full_name, mobile, pincode, locality, address, city, state, payment_method, total_amount, order_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING')";
                 
                 try (PreparedStatement orderPs = con.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS)) {
                     orderPs.setInt(1, userId);
@@ -93,7 +93,7 @@ public class OrderServlet extends HttpServlet {
                                     itemPs.executeUpdate();
                                 }
 
-                                // 6. REDUCE PRODUCT QUANTITY FROM DATABASE (STOCK - 1)
+                                // 6. Reduce product quantity from database (stock - 1)
                                 String reduceStockSql = "UPDATE products SET stock = stock - 1 WHERE product_id = ?";
                                 try (PreparedStatement stockPs = con.prepareStatement(reduceStockSql)) {
                                     stockPs.setInt(1, productId);
