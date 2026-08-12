@@ -3,134 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Vizora</title>
+    <title>Login | Vizora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-
-        .auth-page {
-            background: #f1f3f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .auth-container {
-            background: #fff;
-            width: 100%;
-            max-width: 400px;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-
-        .auth-header { text-align: center; margin-bottom: 30px; }
-        .auth-header h2 { font-size: 32px; color: #2874f0; }
-        .auth-header span { color: #ff9800; }
-
-        .input-group { position: relative; margin-bottom: 20px; }
-        .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px 12px 12px 40px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 15px;
-            outline: none;
-        }
-
-        .input-group input:focus { border-color: #2874f0; }
-
-        .auth-btn {
-            width: 100%;
-            padding: 12px;
-            background: #2874f0;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: .3s;
-        }
-
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f1f3f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        
+        .auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+        .auth-box { background: #fff; width: 420px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); position: relative; }
+        
+        .auth-header { background: #ffffff; padding: 25px 25px 15px 25px; text-align: center; border-bottom: 1px solid #f0f0f0; }
+        .auth-header h2 { font-size: 28px; color: #2874f0; font-weight: 700; font-style: italic; margin: 0; }
+        .auth-header span { color: #ff9f00; }
+        .auth-header small { color: #878787; font-size: 12px; font-weight: 500; display: block; margin-top: 4px; }
+        
+        .auth-body { padding: 25px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 500; color: #555; margin-bottom: 8px; }
+        .form-group input { width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 4px; outline: none; font-size: 14px; background: #fafafa; transition: 0.3s; }
+        .form-group input:focus { border-color: #2874f0; background: #fff; }
+        
+        .auth-btn { width: 100%; padding: 13px; background: #2874f0; color: #fff; border: none; border-radius: 4px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .auth-btn:hover { background: #0d62e6; }
-
-        .auth-footer { text-align: center; margin-top: 20px; font-size: 14px; }
-        .auth-footer a { color: #2874f0; text-decoration: none; font-weight: 600; }
-
-        .forgot-password{
-            text-align:right;
-            margin:-8px 0 20px;
-        }
-
-        .forgot-password a{
-            text-decoration:none;
-            color:#2874f0;
-            font-size:14px;
-            font-weight:500;
-            transition:.3s;
-        }
-
-        .forgot-password a:hover{
-            text-decoration:underline;
-        }
+        
+        #otp-section { display: none; }
+        .back-link { text-align: center; margin-top: 15px; font-size: 13px; color: #2874f0; cursor: pointer; }
+        .back-link:hover { text-decoration: underline; }
     </style>
 </head>
-<body class="auth-page">
+<body>
 
-<div class="auth-container">
-    <div class="auth-header">
-        <h2>Vizo<span>ra</span></h2>
-        <p>Log in to continue shopping</p>
-    </div>
-
-    <!-- UPDATED ACTION PATH HERE -->
-    <form action="/VIZORA/LoginServlet" method="POST" id="loginForm">
-        <div class="input-group">
-            <i class="fa-solid fa-envelope"></i>
-            <input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="Email Address"
-                required>
+<div class="auth-overlay">
+    <div class="auth-box">
+        <div class="auth-header">
+            <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                <h2>Vizo<span>ra</span></h2>
+                <small>See Beyond Style</small>
+            </div>
         </div>
+        <div class="auth-body">
+            
+            <!-- Step 1: Email Form (फक्त ईमेल) -->
+            <div id="email-section">
+                <div class="form-group">
+                    <label><i class="fa-regular fa-envelope"></i> Enter your Email Address</label>
+                    <input type="email" id="email" placeholder="e.g. rohan@gmail.com">
+                </div>
+                <button class="auth-btn" onclick="sendOtp()">Request OTP</button>
+            </div>
 
-        <div class="input-group">
-            <i class="fa-solid fa-lock"></i>
-            <input type="password" name="password" id="password" 
-                placeholder="Enter Password" 
-                required 
-                minlength="6">
+            <!-- Step 2: OTP Verification Form -->
+            <div id="otp-section">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-lock"></i> Enter 6-Digit OTP sent to your email</label>
+                    <input type="text" id="otp" maxlength="6" placeholder="Enter 6-digit code">
+                </div>
+                <button class="auth-btn" onclick="verifyOtp()">Verify & Login</button>
+                <div class="back-link" onclick="backToEmail()"><i class="fa-solid fa-arrow-left"></i> Change Email Address</div>
+            </div>
+
         </div>
-
-        <div class="forgot-password">
-            <a href="forgot-password.html">Forgot Password?</a>
-        </div>
-        
-        <button type="submit" class="auth-btn">Login</button>
-    </form>
-
-    <div class="auth-footer">
-        <p>New to Vizora? <a href="signup.html">Create an account</a></p>
     </div>
 </div>
 
-</body>
 <script>
-document.getElementById("loginForm").onsubmit = function(e){
-    const email = document.getElementById("email").value.trim();
-    const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    function sendOtp() {
+        const email = document.getElementById('email').value.trim();
 
-    if(!emailPattern.test(email)){
-        alert("Please enter a valid email address.");
-        e.preventDefault();
+        if(!email) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+
+        fetch('/VIZORA/SendOtpServlet', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'email=' + encodeURIComponent(email)
+        })
+        .then(res => res.text())
+        .then(data => {
+            if(data.trim() === 'OTP sent successfully') {
+                alert('OTP sent successfully to your email!');
+                document.getElementById('email-section').style.display = 'none';
+                document.getElementById('otp-section').style.display = 'block';
+            } else {
+                alert(data);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Error sending OTP.');
+        });
     }
-};
+
+    function verifyOtp() {
+        const email = document.getElementById('email').value.trim();
+        const otp = document.getElementById('otp').value.trim();
+
+        if(!otp || otp.length !== 6) {
+            alert('Please enter a valid 6-digit OTP.');
+            return;
+        }
+
+        fetch('/VIZORA/VerifyOtpServlet', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'email=' + encodeURIComponent(email) + '&otp=' + encodeURIComponent(otp)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === 'success') {
+                localStorage.setItem("userName", data.userName);
+                localStorage.setItem("userId", data.userId);
+                localStorage.setItem("loggedIn", "true");
+
+                alert('Login Successful!');
+                window.location.href = 'index.html';
+            } else {
+                alert(data.message || 'Invalid or Expired OTP.');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Verification failed.');
+        });
+    }
+
+    function backToEmail() {
+        document.getElementById('otp-section').style.display = 'none';
+        document.getElementById('email-section').style.display = 'block';
+    }
 </script>
+
+</body>
 </html>

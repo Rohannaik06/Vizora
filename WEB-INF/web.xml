@@ -7,6 +7,26 @@
 
     <display-name>VIZORA</display-name>
 
+    <!-- Send OTP Servlet -->
+    <servlet>
+        <servlet-name>SendOtpServlet</servlet-name>
+        <servlet-class>SendOtpServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SendOtpServlet</servlet-name>
+        <url-pattern>/SendOtpServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Verify OTP Servlet -->
+    <servlet>
+        <servlet-name>VerifyOtpServlet</servlet-name>
+        <servlet-class>VerifyOtpServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>VerifyOtpServlet</servlet-name>
+        <url-pattern>/VerifyOtpServlet</url-pattern>
+    </servlet-mapping>
+
     <!-- Product Servlet -->
     <servlet>
         <servlet-name>ProductServlet</servlet-name>

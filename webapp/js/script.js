@@ -8,13 +8,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // ================= LOGIN / LOGOUT =================
 function checkLoginState() {
-    const login = localStorage.getItem("isLoggedIn");
+    const login = localStorage.getItem("loggedIn");
+    const userId = localStorage.getItem("userId");
     const beforeLogin = document.getElementById("beforeLogin");
     const afterLogin = document.getElementById("afterLogin");
 
     if (beforeLogin && afterLogin) {
-        beforeLogin.style.display = (login === "true") ? "none" : "flex";
-        afterLogin.style.display = (login === "true") ? "flex" : "none";
+        if (login === "true" || userId) {
+            beforeLogin.style.display = "none";
+            afterLogin.style.display = "flex";
+        } else {
+            beforeLogin.style.display = "flex";
+            afterLogin.style.display = "none";
+        }
     }
 
     const username = localStorage.getItem("userName");
@@ -25,7 +31,7 @@ function checkLoginState() {
 }
 
 function logout() {
-    localStorage.clear(); // सर्व जुना डेटा (isLoggedIn, userId) डिलीट करेल
+    localStorage.clear(); // सर्व जुना डेटा डिलीट करेल
     window.location.href = "index.html";
 }
 
@@ -71,7 +77,7 @@ function fetchProducts() {
             let gen = product.gender ? product.gender.toLowerCase() : "";
             let pol = product.polarized ? "polarized" : "";
 
-           grid.innerHTML += `
+            grid.innerHTML += `
                 <div class="product-card" 
                     data-id="${product.id}" 
                     data-category="${product.category ? product.category.toLowerCase() : ''}"
@@ -79,7 +85,7 @@ function fetchProducts() {
                     data-brand="${product.brand ? product.brand.toLowerCase() : ''}">
                 
                     <div class="img-container">
-                        <div class="wishlist" onclick="toggleWishlist(${product.id}, this)">
+                        <div class="wishlist" onclick="toggleWishlist(event, ${product.id}, this)">
                             <i class="fa-regular fa-heart"></i>
                         </div>
                         
@@ -156,29 +162,6 @@ function filterProducts(category, btnElement) {
     });
 }
 
-// ================= WISHLIST & PRODUCT CLICK =================
-document.addEventListener("click", function(e) {
-    // Wishlist Toggle
-    if (e.target.classList.contains("fa-heart")) {
-        e.target.classList.toggle("fa-regular");
-        e.target.classList.toggle("fa-solid");
-        e.target.parentElement.classList.toggle("active");
-        return; 
-    }
-
-    // Product Card Click (Redirect to details)
-    const card = e.target.closest(".product-card");
-    if (!card) return;
-    
-    // जर युजरने Add to Cart किंवा Buy Now वर क्लिक केले असेल तर पेज बदलू नका
-    if (e.target.closest(".btn-add") || e.target.closest(".btn-buy") || e.target.closest(".wishlist")) {
-        return;
-    }
-
-    // Future: window.location = "product.html?id=" + card.dataset.id;
-    console.log("Card Clicked:", card.dataset.id);
-});
-
 // ================= ADD TO CART (सुधारित) =================
 function addToCart(productId) {
     const userId = localStorage.getItem("userId");
@@ -223,17 +206,16 @@ function updateCartCount() {
     .then(response => response.json())
     .then(cartItems => {
         const cartBtn = document.querySelector(".cart-btn");
+        if (!cartBtn) return;
         
         // कार्ट मधील सर्व आयटम्सच्या quantity ची बेरीज करा
         let totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
         
         // बटन टेक्स्ट अपडेट करा
         cartBtn.innerHTML = `<i class="fa-solid fa-cart-shopping"></i> Cart (${totalCount})`;
-    });
+    })
+    .catch(err => console.error("Cart count error:", err));
 }
-
-// पेज लोड होताना सुद्धा एकदा अपडेट करा
-document.addEventListener("DOMContentLoaded", updateCartCount);
 
 // ================= NOTIFICATION =================
 const notifyBtn = document.querySelector(".notify-btn");
@@ -243,9 +225,10 @@ if (notifyBtn) {
     };
 }
 
-
 // ================= TOGGLE WISHLIST =================
-function toggleWishlist(productId, element) {
+function toggleWishlist(e, productId, element) {
+    // इव्हेंट बबलिंग थांबवण्यासाठी (जेणेकरून कार्डवर क्लिक केल्यासारखे वाटणार नाही)
+    e.stopPropagation();
     const userId = localStorage.getItem("userId");
 
     // युजर लॉगिन नसेल तर आधी लॉगिन करायला सांगा
@@ -254,9 +237,6 @@ function toggleWishlist(productId, element) {
         window.location.href = "login.html";
         return;
     }
-
-    // इव्हेंट बबलिंग थांबवण्यासाठी (जेणेकरून कार्डवर क्लिक केल्यासारखे वाटणार नाही)
-    event.stopPropagation();
 
     fetch("/VIZORA/WishlistServlet", {
         method: "POST",
@@ -288,16 +268,13 @@ function toggleWishlist(productId, element) {
     .catch(error => console.error("Error updating wishlist:", error));
 }
 
-
 // ================= WISHLIST & PRODUCT CARD CLICK =================
 document.addEventListener("click", function(e) {
-    
     // 1. If the user clicked outside a product card, do nothing
     const card = e.target.closest(".product-card");
     if (!card) return;
     
     // 2. If the user clicked Add to Cart, Buy Now, or the Wishlist Heart, DO NOT redirect.
-    // Let their respective onclick functions do the work.
     if (e.target.closest(".btn-add") || e.target.closest(".btn-buy") || e.target.closest(".wishlist")) {
         return;
     }
