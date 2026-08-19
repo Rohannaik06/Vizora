@@ -1,9 +1,14 @@
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,9 +16,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/OrderServlet")
-public class OrderServlet extends HttpServlet {
+@WebServlet("/VerifyPaymentServlet")
+public class VerifyPaymentServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+
+    private static final String KEY_SECRET = "zHv3yj4hhP75wkRzYk8aWUI1";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -23,10 +30,11 @@ public class OrderServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
+            String razorpayPaymentId = request.getParameter("razorpay_payment_id");
+            String razorpayOrderId = request.getParameter("razorpay_order_id");
+            String razorpaySignature = request.getParameter("razorpay_signature");
+
             int userId = Integer.parseInt(request.getParameter("userId"));
-            String checkoutType = request.getParameter("checkoutType");
-            String productIdStr = request.getParameter("productId");
-            
             String fullName = request.getParameter("fullName");
             String mobile = request.getParameter("mobile");
             String pincode = request.getParameter("pincode");
@@ -34,11 +42,21 @@ public class OrderServlet extends HttpServlet {
             String address = request.getParameter("address");
             String city = request.getParameter("city");
             String state = request.getParameter("state");
-            String paymentMethod = request.getParameter("paymentMethod");
+            String checkoutType = request.getParameter("checkoutType");
+            String productIdStr = request.getParameter("productId");
 
+            // 1. HMAC-SHA256 वापरून Razorpay सिग्नेचर व्हेरिफाय करणे
+            String payload = razorpayOrderId + "|" + razorpayPaymentId;
+            String generatedSignature = calculateHmacSha256(payload, KEY_SECRET);
+
+            if (!generatedSignature.equals(razorpaySignature)) {
+                out.print("error: payment signature verification failed");
+                return;
+            }
+
+            // 2. सिग्नेचर मॅच झाली, डेटाबेसमध्ये ऑर्डर 'CONFIRMED' आणि 'ONLINE' म्हणून सेव्ह करणे
             try (Connection con = DBConnection.getConnection()) {
                 
-                // 1. कार्ट चेकआउट (From Cart)
                 if ("cart".equals(checkoutType)) {
                     String cartSql = "SELECT c.product_id, c.quantity, p.selling_price FROM cart c JOIN products p ON c.product_id = p.product_id WHERE c.user_id = ?";
                     double totalAmount = 0.0;
@@ -52,8 +70,8 @@ public class OrderServlet extends HttpServlet {
                         }
                     }
 
-                    // 'PENDING' ऐवजी 'CONFIRMED' सेट केले आहे
-                    String orderSql = "INSERT INTO orders (user_id, full_name, mobile, pincode, locality, address, city, state, payment_method, total_amount, order_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'CONFIRMED')";
+                    // 'PAID' ऐवजी 'CONFIRMED' केले जेणेकरून युजरला सुंदर दिसेल
+                    String orderSql = "INSERT INTO orders (user_id, full_name, mobile, pincode, locality, address, city, state, payment_method, total_amount, order_status, payment_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'ONLINE', ?, 'CONFIRMED', ?)";
                     int newOrderId = 0;
 
                     try (PreparedStatement orderPs = con.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS)) {
@@ -65,8 +83,8 @@ public class OrderServlet extends HttpServlet {
                         orderPs.setString(6, address);
                         orderPs.setString(7, city);
                         orderPs.setString(8, state);
-                        orderPs.setString(9, paymentMethod);
-                        orderPs.setDouble(10, totalAmount);
+                        orderPs.setDouble(9, totalAmount);
+                        orderPs.setString(10, razorpayPaymentId);
 
                         if (orderPs.executeUpdate() > 0) {
                             try (ResultSet keys = orderPs.getGeneratedKeys()) {
@@ -111,34 +129,19 @@ public class OrderServlet extends HttpServlet {
                         out.print("error: failed to save cart order");
                     }
 
-                } 
-                // 2. डायरेक्ट Buy Now चेकआउट
-                else {
+                } else {
                     int productId = Integer.parseInt(productIdStr);
                     double realPrice = 0.0;
-                    int currentStock = 0;
 
-                    String priceSql = "SELECT selling_price, stock FROM products WHERE product_id = ?";
-                    try (PreparedStatement pricePs = con.prepareStatement(priceSql)) {
-                        pricePs.setInt(1, productId);
-                        try (ResultSet rs = pricePs.executeQuery()) {
-                            if (rs.next()) {
-                                realPrice = rs.getDouble("selling_price");
-                                currentStock = rs.getInt("stock");
-                            } else {
-                                out.print("error: product not found");
-                                return;
-                            }
+                    try (PreparedStatement ps = con.prepareStatement("SELECT selling_price FROM products WHERE product_id = ?")) {
+                        ps.setInt(1, productId);
+                        try (ResultSet rs = ps.executeQuery()) {
+                            if (rs.next()) realPrice = rs.getDouble("selling_price");
                         }
                     }
 
-                    if (currentStock <= 0) {
-                        out.print("error: product is out of stock");
-                        return;
-                    }
-
-                    // 'PENDING' ऐवजी 'CONFIRMED' सेट केले आहे
-                    String orderSql = "INSERT INTO orders (user_id, full_name, mobile, pincode, locality, address, city, state, payment_method, total_amount, order_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'CONFIRMED')";
+                    // 'PAID' ऐवजी 'CONFIRMED' केले
+                    String orderSql = "INSERT INTO orders (user_id, full_name, mobile, pincode, locality, address, city, state, payment_method, total_amount, order_status, payment_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'ONLINE', ?, 'CONFIRMED', ?)";
                     
                     try (PreparedStatement orderPs = con.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS)) {
                         orderPs.setInt(1, userId);
@@ -149,26 +152,22 @@ public class OrderServlet extends HttpServlet {
                         orderPs.setString(6, address);
                         orderPs.setString(7, city);
                         orderPs.setString(8, state);
-                        orderPs.setString(9, paymentMethod);
-                        orderPs.setDouble(10, realPrice);
+                        orderPs.setDouble(9, realPrice);
+                        orderPs.setString(10, razorpayPaymentId);
 
-                        int rowsAffected = orderPs.executeUpdate();
+                        if (orderPs.executeUpdate() > 0) {
+                            try (ResultSet keys = orderPs.getGeneratedKeys()) {
+                                if (keys.next()) {
+                                    int newOrderId = keys.getInt(1);
 
-                        if (rowsAffected > 0) {
-                            try (ResultSet generatedKeys = orderPs.getGeneratedKeys()) {
-                                if (generatedKeys.next()) {
-                                    int newOrderId = generatedKeys.getInt(1);
-
-                                    String itemSql = "INSERT INTO order_items (order_id, product_id, price, quantity) VALUES (?, ?, ?, 1)";
-                                    try (PreparedStatement itemPs = con.prepareStatement(itemSql)) {
+                                    try (PreparedStatement itemPs = con.prepareStatement("INSERT INTO order_items (order_id, product_id, price, quantity) VALUES (?, ?, ?, 1)")) {
                                         itemPs.setInt(1, newOrderId);
                                         itemPs.setInt(2, productId);
                                         itemPs.setDouble(3, realPrice);
                                         itemPs.executeUpdate();
                                     }
 
-                                    String reduceStockSql = "UPDATE products SET stock = stock - 1 WHERE product_id = ?";
-                                    try (PreparedStatement stockPs = con.prepareStatement(reduceStockSql)) {
+                                    try (PreparedStatement stockPs = con.prepareStatement("UPDATE products SET stock = stock - 1 WHERE product_id = ?")) {
                                         stockPs.setInt(1, productId);
                                         stockPs.executeUpdate();
                                     }
@@ -177,14 +176,33 @@ public class OrderServlet extends HttpServlet {
                                 }
                             }
                         } else {
-                            out.print("error: failed to create direct order");
+                            out.print("error: failed to save direct order");
                         }
                     }
                 }
             }
-        } catch (Exception e) {
+
+        } catch (Throwable e) {
             e.printStackTrace();
             out.print("error: " + e.getMessage());
+        }
+    }
+
+    private String calculateHmacSha256(String data, String secret) {
+        try {
+            Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secret_key = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+            sha256_HMAC.init(secret_key);
+            byte[] hash = sha256_HMAC.doFinal(data.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new RuntimeException("Failed to calculate hmac-sha256", e);
         }
     }
 }

@@ -7,19 +7,19 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <style>
-        /* ================= GLOBAL ================= */
         body { background: #f1f3f6; font-family: 'Inter', sans-serif; margin: 0; padding: 0; color: #212121; }
         * { box-sizing: border-box; }
 
-        /* Flipkart Style Header & Steps Progress Bar */
         header { position: sticky; top: 0; width: 100%; height: 75px; background: #ffffff; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000; border-bottom: 2px solid #2874f0; }
         .logo { cursor: pointer; text-align: left; }
         .logo h2 { font-size: 26px; color: #2874f0; font-weight: 700; font-style: italic; margin: 0; }
         .logo span { color: #ff9f00; }
         
-        /* 3-Step Progress Indicator */
         .checkout-steps { display: flex; align-items: center; gap: 40px; }
         .step { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 13px; font-weight: 500; color: #878787; transition: 0.3s; }
         .step-circle { width: 28px; height: 28px; border-radius: 50%; background: #e0e0e0; color: #fff; display: flex; justify-content: center; align-items: center; font-size: 13px; font-weight: 600; }
@@ -28,12 +28,10 @@
         .step.completed .step-circle { background: #388e3c; }
         .step.completed { color: #388e3c; }
         
-        /* ================= LAYOUT ================= */
         .checkout-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: flex; gap: 30px; align-items: flex-start; min-height: 70vh; }
         .left-col { flex: 2; display: flex; flex-direction: column; gap: 20px; }
         .right-col { flex: 1; position: sticky; top: 100px; }
 
-        /* Sections (Boxes) */
         .checkout-section { background: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; transition: 0.3s; }
         .section-header { background: #f8f9fa; color: #878787; padding: 15px 20px; font-size: 15px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; }
         .section-header.active { background: #2874f0; color: #fff; }
@@ -42,7 +40,6 @@
         .section-content { padding: 25px; }
         .section-content.disabled { opacity: 0.5; pointer-events: none; background: #fafafa; }
 
-        /* Address Card Preview */
         .address-card-preview { border: 1px solid #e0e0e0; border-radius: 4px; padding: 20px; background: #fafafa; display: flex; justify-content: space-between; align-items: flex-start; }
         .address-info h4 { margin: 0 0 8px; font-size: 16px; font-weight: 600; color: #212121; display: flex; gap: 15px; align-items: center; }
         .address-info h4 span { font-size: 13px; font-weight: 500; color: #878787; background: #e0e0e0; padding: 2px 8px; border-radius: 2px; }
@@ -50,7 +47,6 @@
         .btn-change-address { background: #fff; color: #2874f0; border: 1px solid #2874f0; padding: 6px 16px; border-radius: 2px; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.3s; }
         .btn-change-address:hover { background: #f5faff; }
 
-        /* ================= FORMS ================= */
         .form-row { display: flex; gap: 20px; margin-bottom: 20px; }
         .input-group { flex: 1; display: flex; flex-direction: column; }
         .input-group label { font-size: 13px; color: #878787; margin-bottom: 8px; font-weight: 500; }
@@ -64,7 +60,6 @@
         .btn-continue-payment { background: #fb641b; color: #fff; border: none; padding: 12px 30px; font-size: 14px; font-weight: 600; border-radius: 2px; cursor: pointer; transition: 0.3s; margin-top: 15px; }
         .btn-continue-payment:hover { background: #df5815; }
 
-        /* ================= ORDER SUMMARY CARD (Step 2 View) ================= */
         .order-summary-preview { display: flex; flex-direction: column; gap: 15px; }
         .summary-item-row { display: flex; gap: 15px; align-items: center; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0; }
         .summary-item-row img { width: 60px; height: 60px; object-fit: contain; border: 1px solid #f0f0f0; border-radius: 4px; padding: 4px; }
@@ -73,25 +68,15 @@
         .summary-item-details p { margin: 0; font-size: 13px; color: #878787; }
         .summary-item-price { font-size: 16px; font-weight: 700; color: #212121; }
 
-        /* ================= PAYMENT OPTIONS (Scan & Pay) ================= */
-        .payment-option { border: 1px solid #e0e0e0; border-radius: 4px; margin-bottom: 15px; overflow: hidden; transition: 0.3s; }
+        .payment-option { border: 1px solid #e0e0e0; border-radius: 4px; margin-bottom: 15px; overflow: hidden; transition: 0.3s; display: block; }
         .payment-option.active { border-color: #2874f0; background: #f5faff; }
         .payment-header { padding: 18px 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; font-weight: 500; }
         .payment-header input[type="radio"] { accent-color: #2874f0; width: 18px; height: 18px; cursor: pointer; }
         .payment-header i { font-size: 20px; color: #878787; width: 30px; text-align: center; }
         .payment-option.active .payment-header i { color: #2874f0; }
-        
         .payment-body { padding: 0 20px 20px 65px; display: none; }
         .payment-option.active .payment-body { display: block; }
 
-        /* Scan & Pay QR Code Box Design */
-        .scan-pay-container { display: flex; gap: 20px; align-items: center; background: #fff; padding: 15px; border: 1px dashed #2874f0; border-radius: 6px; margin-top: 10px; }
-        .qr-box { width: 110px; height: 110px; background: #fff; border: 1px solid #e0e0e0; padding: 5px; display: flex; justify-content: center; align-items: center; border-radius: 4px; }
-        .qr-box img { width: 100%; height: 100%; object-fit: contain; }
-        .scan-instructions { flex: 1; font-size: 13px; color: #555; line-height: 1.5; }
-        .scan-instructions strong { color: #212121; display: block; margin-bottom: 4px; font-size: 14px; }
-
-        /* ================= RIGHT SIDE PRICE DETAILS ================= */
         .summary-box { background: #fff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 25px; }
         .summary-title { font-size: 16px; font-weight: 600; color: #878787; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px; margin-bottom: 20px; text-transform: uppercase; }
         
@@ -117,7 +102,6 @@
             <h2>Vizo<span>ra</span></h2>
         </div>
         
-        <!-- Flipkart Style 3-Step Progress Header Indicator -->
         <div class="checkout-steps">
             <div class="step active" id="stepIndicator1">
                 <div class="step-circle" id="circle1">1</div>
@@ -137,52 +121,48 @@
     </header>
 
     <div class="checkout-container">
-        
         <div class="left-col">
             
-            <!-- STEP 1: DELIVERY ADDRESS SECTION -->
+            <!-- STEP 1: ADDRESS -->
             <div class="checkout-section" id="addressSectionBox">
                 <div class="section-header active" id="addrHeader">
                     <div><span>1</span> Delivery Address</div>
                 </div>
                 <div class="section-content" id="addrContent">
-                    
-                    <!-- View Mode (Preview after saving address) -->
                     <div id="addressPreviewView" style="display: none;">
                         <div class="address-card-preview">
                             <div class="address-info">
                                 <h4 id="previewName">Name <span>Mobile</span></h4>
-                                <p id="previewFullAddress">Complete street address, City, State - Pincode</p>
+                                <p id="previewFullAddress">Complete address</p>
                             </div>
                             <button class="btn-change-address" onclick="enableAddressEdit()">CHANGE</button>
                         </div>
                     </div>
 
-                    <!-- Edit / Form Mode -->
                     <form id="addressForm" onsubmit="saveAddressForm(event)">
                         <div class="form-row">
                             <div class="input-group">
                                 <label>Full Name *</label>
-                                <input type="text" id="fullName" placeholder="Enter your full name" required>
+                                <input type="text" id="fullName" required>
                             </div>
                             <div class="input-group">
                                 <label>Mobile Number *</label>
-                                <input type="tel" id="mobile" placeholder="10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required>
+                                <input type="tel" id="mobile" pattern="[0-9]{10}" maxlength="10" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="input-group">
                                 <label>Pincode *</label>
-                                <input type="text" id="pincode" placeholder="6 digits [0-9] PIN code" pattern="[0-9]{6}" maxlength="6" required>
+                                <input type="text" id="pincode" pattern="[0-9]{6}" maxlength="6" required>
                             </div>
                             <div class="input-group">
                                 <label>Locality / Town *</label>
-                                <input type="text" id="locality" placeholder="Area details" required>
+                                <input type="text" id="locality" required>
                             </div>
                         </div>
                         <div class="input-group" style="margin-bottom: 20px;">
                             <label>Address (Area and Street) *</label>
-                            <textarea id="address" rows="3" placeholder="Flat, House no., Building, Company, Apartment" required></textarea>
+                            <textarea id="address" rows="3" required></textarea>
                         </div>
                         <div class="form-row">
                             <div class="input-group">
@@ -199,59 +179,30 @@
                 </div>
             </div>
 
-            <!-- STEP 2: ORDER SUMMARY SECTION -->
+            <!-- STEP 2: SUMMARY -->
             <div class="checkout-section" id="summarySectionBox">
                 <div class="section-header" id="summaryHeader">
                     <div><span>2</span> Order Summary</div>
                 </div>
                 <div class="section-content disabled" id="summaryContent">
-                    <div class="order-summary-preview" id="summaryItemsList">
-                        <!-- Loaded dynamically -->
-                    </div>
+                    <div class="order-summary-preview" id="summaryItemsList"></div>
                     <button class="btn-continue-payment" onclick="proceedToPayment()">CONTINUE TO PAYMENT</button>
                 </div>
             </div>
 
-            <!-- STEP 3: PAYMENT OPTIONS SECTION (Scan & Pay included) -->
+            <!-- STEP 3: PAYMENT -->
             <div class="checkout-section" id="paymentSectionBox">
                 <div class="section-header" id="payHeader">
                     <div><span>3</span> Payment Options</div>
                 </div>
                 <div class="section-content disabled" id="paymentContent" style="padding: 15px;">
-                    
-                    <!-- Scan & Pay Professional Option -->
                     <label class="payment-option active">
                         <div class="payment-header">
-                            <input type="radio" name="payment_method" value="SCAN_AND_PAY" checked onchange="togglePayment()">
-                            <i class="fa-solid fa-qrcode"></i> Scan & Pay (GPay / PhonePe / Paytm / BHIM)
+                            <input type="radio" name="payment_method" value="ONLINE" checked onchange="togglePayment()">
+                            <i class="fa-solid fa-credit-card"></i> Pay Online (Razorpay)
                         </div>
-                        <div class="payment-body">
-                            <div class="scan-pay-container">
-                                <div class="qr-box">
-                                    <!-- Dynamic real QR code generator based on price -->
-                                    <img id="dynamicQR" src="" alt="Payment QR Code">
-                                </div>
-                                <div class="scan-instructions">
-                                    <strong>Scan QR using any UPI App</strong>
-                                    Open your preferred payment app, scan this QR code, complete the secure transaction, and click 'Place Order' below to verify.
-                                </div>
-                            </div>
-                        </div>
-                    </label>
-
-                    <label class="payment-option">
-                        <div class="payment-header">
-                            <input type="radio" name="payment_method" value="CARD" onchange="togglePayment()">
-                            <i class="fa-regular fa-credit-card"></i> Credit / Debit / ATM Card
-                        </div>
-                        <div class="payment-body">
-                            <div class="input-group" style="margin-bottom: 15px;">
-                                <input type="text" placeholder="Card Number (16 digits)">
-                            </div>
-                            <div class="form-row" style="margin-bottom: 0;">
-                                <div class="input-group"><input type="text" placeholder="Valid Thru (MM/YY)"></div>
-                                <div class="input-group"><input type="password" placeholder="CVV"></div>
-                            </div>
+                        <div class="payment-body" style="font-size: 13px; color: #555;">
+                            Pay securely using UPI, Credit/Debit Card, or NetBanking.
                         </div>
                     </label>
 
@@ -261,19 +212,17 @@
                             <i class="fa-solid fa-money-bill-wave"></i> Cash on Delivery (COD)
                         </div>
                         <div class="payment-body" style="color: #388e3c; font-size: 14px; font-weight: 500;">
-                            Pay securely by cash or UPI when the product arrives at your doorstep.
+                            Pay securely by cash when the product arrives.
                         </div>
                     </label>
-
                 </div>
             </div>
         </div>
 
-        <!-- RIGHT COLUMN: PRICE DETAILS SUMMARY -->
+        <!-- RIGHT SIDE -->
         <div class="right-col">
             <div class="summary-box">
                 <div class="summary-title">Price Details</div>
-                
                 <div class="price-row">
                     <span>Price (<span id="itemCountBadge">1</span> item)</span>
                     <span id="bill-mrp">₹0</span>
@@ -286,18 +235,13 @@
                     <span>Delivery Charges</span>
                     <span style="color: #388e3c;">FREE</span>
                 </div>
-                
                 <div class="total-row">
                     <span>Total Amount</span>
                     <span id="bill-total">₹0</span>
                 </div>
-
-                <button class="btn-place-order" id="placeOrderBtn" onclick="placeOrder()">
-                    PLACE ORDER
-                </button>
+                <button class="btn-place-order" id="placeOrderBtn" onclick="placeOrder()">PLACE ORDER</button>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -307,18 +251,11 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             const userId = localStorage.getItem("userId");
-            if (!userId) {
-                alert("Session expired. Please login again.");
-                window.location.href = "login.html";
-                return;
-            }
+            if (!userId) { window.location.href = "login.html"; return; }
 
             const storedName = localStorage.getItem("userName");
-            if (storedName) {
-                document.getElementById("fullName").value = storedName;
-            }
+            if (storedName) document.getElementById("fullName").value = storedName;
 
-            // Fetch pre-saved address if available
             fetch(`/VIZORA/AddressServlet?userId=${userId}`)
             .then(res => res.json())
             .then(data => {
@@ -330,10 +267,9 @@
                     document.getElementById("address").value = data.address || "";
                     document.getElementById("city").value = data.city || "";
                     document.getElementById("state").value = data.state || "";
-                    
                     lockAddressForm();
                 }
-            }).catch(err => console.log("No pre-saved address found."));
+            }).catch(err => console.log("No pre-saved address."));
 
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('productId');
@@ -344,34 +280,18 @@
             } else if (productId) {
                 loadCheckoutSingleProduct(productId);
             } else {
-                alert("Invalid request. Redirecting to home.");
+                alert("Invalid request.");
                 window.location.href = "index.html";
             }
         });
 
-        // Step 1: Save Address & Progress to Step 2
         function saveAddressForm(event) {
             event.preventDefault();
-            
-            const fullName = document.getElementById("fullName").value.trim();
-            const mobile = document.getElementById("mobile").value.trim();
-            const pincode = document.getElementById("pincode").value.trim();
-            const locality = document.getElementById("locality").value.trim();
-            const address = document.getElementById("address").value.trim();
-            const city = document.getElementById("city").value.trim();
-            const state = document.getElementById("state").value.trim();
-
-            if(!fullName || !mobile || !pincode || !locality || !address || !city || !state) {
-                alert("Please fill in all required address fields.");
-                return;
-            }
-
             lockAddressForm();
         }
 
         function lockAddressForm() {
             isAddressSaved = true;
-            
             const fullName = document.getElementById("fullName").value;
             const mobile = document.getElementById("mobile").value;
             const address = document.getElementById("address").value;
@@ -386,13 +306,11 @@
             document.getElementById("addressForm").style.display = "none";
             document.getElementById("addressPreviewView").style.display = "block";
 
-            // Complete Step 1
             document.getElementById("addrHeader").classList.remove("active");
             document.getElementById("stepIndicator1").classList.remove("active");
             document.getElementById("stepIndicator1").classList.add("completed");
             document.getElementById("circle1").innerHTML = '<i class="fa-solid fa-check"></i>';
 
-            // Activate Step 2 (Order Summary)
             document.getElementById("summaryHeader").classList.add("active");
             document.getElementById("summaryContent").classList.remove("disabled");
             document.getElementById("stepIndicator2").classList.add("active");
@@ -402,53 +320,33 @@
         function enableAddressEdit() {
             isAddressSaved = false;
             isSummaryConfirmed = false;
-            
             document.getElementById("addressPreviewView").style.display = "none";
             document.getElementById("addressForm").style.display = "block";
-
             document.getElementById("addrHeader").classList.add("active");
             document.getElementById("summaryHeader").classList.remove("active");
             document.getElementById("summaryContent").classList.add("disabled");
             document.getElementById("payHeader").classList.remove("active");
             document.getElementById("paymentContent").classList.add("disabled");
-
-            document.getElementById("stepIndicator1").classList.add("active");
-            document.getElementById("stepIndicator1").classList.remove("completed");
-            document.getElementById("circle1").innerText = "1";
-            document.getElementById("stepIndicator2").classList.remove("active", "completed");
-            document.getElementById("circle2").innerText = "2";
-            document.getElementById("stepIndicator3").classList.remove("active", "completed");
         }
 
-        // Proceed from Step 2 (Summary) to Step 3 (Payment)
         function proceedToPayment() {
             isSummaryConfirmed = true;
-
-            // Complete Step 2
             document.getElementById("summaryHeader").classList.remove("active");
             document.getElementById("summaryContent").classList.add("disabled");
             document.getElementById("stepIndicator2").classList.remove("active");
             document.getElementById("stepIndicator2").classList.add("completed");
             document.getElementById("circle2").innerHTML = '<i class="fa-solid fa-check"></i>';
 
-            // Activate Step 3 (Payment)
             document.getElementById("payHeader").classList.add("active");
             document.getElementById("paymentContent").classList.remove("disabled");
             document.getElementById("stepIndicator3").classList.add("active");
             document.getElementById("circle3").innerText = "3";
         }
 
-        // Load Summary for Single Product (Buy Now)
         function loadCheckoutSingleProduct(productId) {
             fetch(`/VIZORA/ProductDetailsServlet?id=${productId}`)
             .then(res => res.json())
             .then(data => {
-                if (Object.keys(data).length === 0) {
-                    alert("Product details not found.");
-                    window.location.href = "index.html";
-                    return;
-                }
-
                 document.getElementById("summaryItemsList").innerHTML = `
                     <div class="summary-item-row">
                         <img src="images/${data.thumbnail}" alt="Product">
@@ -458,50 +356,23 @@
                             <p>Qty: 1</p>
                         </div>
                         <div class="summary-item-price">₹${data.sellingPrice}</div>
-                    </div>
-                `;
-
-                const mrp = data.originalPrice > 0 ? data.originalPrice : data.sellingPrice;
-                document.getElementById("bill-mrp").innerText = `₹${mrp}`;
-                
-                if (data.originalPrice > data.sellingPrice) {
-                    const discountAmt = data.originalPrice - data.sellingPrice;
-                    document.getElementById("bill-discount").innerText = `- ₹${discountAmt}`;
-                } else {
-                    document.getElementById("bill-discount").innerText = `- ₹0`;
-                }
-
+                    </div>`;
+                document.getElementById("bill-mrp").innerText = `₹${data.originalPrice || data.sellingPrice}`;
+                document.getElementById("bill-discount").innerText = `- ₹${(data.originalPrice > data.sellingPrice) ? (data.originalPrice - data.sellingPrice) : 0}`;
                 finalPrice = data.sellingPrice;
                 document.getElementById("bill-total").innerText = `₹${finalPrice}`;
-                document.getElementById("itemCountBadge").innerText = "1";
-
-                // Generate dynamic Scan & Pay QR Code using public QR API based on price & store name
-                generateQRCode(finalPrice);
-            })
-            .catch(err => console.error("Error loading single product:", err));
+            });
         }
 
-        // Load Summary for Cart Items Checkout
         function loadCheckoutFromCart(userId) {
             fetch(`/VIZORA/ViewCartServlet?userId=${userId}`)
             .then(res => res.json())
             .then(cartItems => {
-                if (!cartItems || cartItems.length === 0) {
-                    alert("Your cart is empty.");
-                    window.location.href = "cart.html";
-                    return;
-                }
-
-                let totalMrp = 0;
-                let totalSellingPrice = 0;
-                let totalItemsCount = 0;
-                let itemsHtml = "";
-
+                let totalMrp = 0, totalSellingPrice = 0, totalItemsCount = 0, itemsHtml = "";
                 cartItems.forEach(item => {
                     totalMrp += (item.original * item.quantity);
                     totalSellingPrice += (item.price * item.quantity);
                     totalItemsCount += item.quantity;
-
                     itemsHtml += `
                         <div class="summary-item-row">
                             <img src="images/${item.image}" alt="Product">
@@ -511,90 +382,102 @@
                                 <p>Qty: ${item.quantity}</p>
                             </div>
                             <div class="summary-item-price">₹${item.price * item.quantity}</div>
-                        </div>
-                    `;
+                        </div>`;
                 });
-
                 document.getElementById("summaryItemsList").innerHTML = itemsHtml;
                 document.getElementById("bill-mrp").innerText = `₹${totalMrp}`;
                 document.getElementById("bill-discount").innerText = `- ₹${totalMrp - totalSellingPrice}`;
-
                 finalPrice = totalSellingPrice;
                 document.getElementById("bill-total").innerText = `₹${finalPrice}`;
                 document.getElementById("itemCountBadge").innerText = totalItemsCount;
-
-                generateQRCode(finalPrice);
-            })
-            .catch(error => console.error("Error loading cart summary:", error));
+            });
         }
 
-        // Generate dynamic Scan & Pay QR code
-        function generateQRCode(amount) {
-            const upiString = `upi://pay?pa=vizora.store@axisbk&pn=Vizora&am=${amount}&cu=INR&tn=VizoraEcommerceOrder`;
-            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiString)}`;
-            document.getElementById("dynamicQR").src = qrApiUrl;
-        }
-
-        // Payment Accordion UI Logic
         function togglePayment() {
-            const options = document.querySelectorAll(".payment-option");
-            options.forEach(opt => opt.classList.remove("active"));
-
+            document.querySelectorAll(".payment-option").forEach(opt => opt.classList.remove("active"));
             const checkedRadio = document.querySelector('input[name="payment_method"]:checked');
-            if (checkedRadio) {
-                checkedRadio.closest(".payment-option").classList.add("active");
+            if (checkedRadio) checkedRadio.closest(".payment-option").classList.add("active");
+        }
+
+        function placeOrder() {
+            if (!isAddressSaved) { alert("Please save your address."); return; }
+            if (!isSummaryConfirmed) { alert("Please continue to payment."); return; }
+
+            const userId = localStorage.getItem("userId");
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
+            // 1. Cash on Delivery (COD) फ्लो
+            if (paymentMethod === "COD") {
+                if (confirm("Place order with Cash on Delivery?")) {
+                    submitOrderToDatabase("COD", "");
+                }
+            } 
+            // 2. Online Razorpay फ्लो
+            else {
+                const urlParams = new URLSearchParams(window.location.search);
+                const productId = urlParams.get('productId');
+                const fromCart = urlParams.get('from');
+
+                const btn = document.getElementById("placeOrderBtn");
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> INITIALIZING...';
+                btn.disabled = true;
+
+                let createOrderParams = "userId=" + userId;
+                if (fromCart === 'cart') createOrderParams += "&checkoutType=cart";
+                else if (productId) createOrderParams += "&checkoutType=direct&productId=" + productId;
+
+                fetch("/VIZORA/CreateRazorpayOrderServlet", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: createOrderParams
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        var options = {
+                            "key": data.key,
+                            "amount": data.amount,
+                            "currency": "INR",
+                            "name": "Vizora Store",
+                            "order_id": data.orderId,
+                            "handler": function (response) {
+                                verifyAndSubmitPayment(response.razorpay_payment_id, response.razorpay_order_id, response.razorpay_signature);
+                            },
+                            "prefill": {
+                                "name": document.getElementById("fullName").value,
+                                "contact": document.getElementById("mobile").value
+                            },
+                            "theme": { "color": "#2874f0" }
+                        };
+                        var rzp1 = new Razorpay(options);
+                        rzp1.open();
+                    } else {
+                        alert("Razorpay Error: " + data.message);
+                        btn.innerHTML = 'PLACE ORDER';
+                        btn.disabled = false;
+                    }
+                });
             }
         }
 
-        // Place Order Logic
-        function placeOrder() {
-            if (!isAddressSaved) {
-                alert("Please save your delivery address first.");
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                return;
-            }
-            if (!isSummaryConfirmed) {
-                alert("Please review your order summary and click 'Continue to Payment'.");
-                return;
-            }
-
+        function submitOrderToDatabase(paymentMethod, paymentId) {
             const userId = localStorage.getItem("userId");
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('productId');
             const fromCart = urlParams.get('from');
 
-            if (!userId) {
-                alert("Session expired. Please login again.");
-                window.location.href = "login.html";
-                return;
-            }
-
-            const fullName = document.getElementById("fullName").value.trim();
-            const mobile = document.getElementById("mobile").value.trim();
-            const pincode = document.getElementById("pincode").value.trim();
-            const locality = document.getElementById("locality").value.trim();
-            const address = document.getElementById("address").value.trim();
-            const city = document.getElementById("city").value.trim();
-            const state = document.getElementById("state").value.trim();
-            
-            const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
-
-            const btn = document.getElementById("placeOrderBtn");
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> PROCESSING...';
-            btn.disabled = true;
-
             const params = new URLSearchParams();
             params.append("userId", userId);
-            params.append("fullName", fullName);
-            params.append("mobile", mobile);
-            params.append("pincode", pincode);
-            params.append("locality", locality);
-            params.append("address", address);
-            params.append("city", city);
-            params.append("state", state);
+            params.append("fullName", document.getElementById("fullName").value);
+            params.append("mobile", document.getElementById("mobile").value);
+            params.append("pincode", document.getElementById("pincode").value);
+            params.append("locality", document.getElementById("locality").value);
+            params.append("address", document.getElementById("address").value);
+            params.append("city", document.getElementById("city").value);
+            params.append("state", document.getElementById("state").value);
             params.append("paymentMethod", paymentMethod);
+            params.append("paymentId", paymentId);
 
-            let endpoint = "/VIZORA/OrderServlet";
             if (fromCart === 'cart') {
                 params.append("checkoutType", "cart");
             } else if (productId) {
@@ -602,27 +485,64 @@
                 params.append("checkoutType", "direct");
             }
 
-            fetch(endpoint, {
+            fetch("/VIZORA/OrderServlet", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: params.toString()
             })
-            .then(response => response.text())
+            .then(res => res.text())
             .then(data => {
                 if (data.trim() === "success") {
-                    alert(`🎉 Order Placed Successfully!\n\nPayment Mode: ${paymentMethod}\n\nThank you for shopping with Vizora!`);
+                    alert("🎉 Order Confirmed Successfully!");
                     window.location.href = "orders.html";
                 } else {
-                    alert("Failed to place order. " + data);
+                    alert("Failed to place order: " + data);
+                    const btn = document.getElementById("placeOrderBtn");
                     btn.innerHTML = 'PLACE ORDER';
                     btn.disabled = false;
                 }
+            });
+        }
+
+        function verifyAndSubmitPayment(paymentId, orderId, signature) {
+            // ऑनलाइन पेमेंट झाल्यावर VerifyPaymentServlet कॉल होईल, जे आपोआप CONFIRMED स्टेटस सेव्ह करेल
+            const userId = localStorage.getItem("userId");
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('productId');
+            const fromCart = urlParams.get('from');
+
+            const params = new URLSearchParams();
+            params.append("razorpay_payment_id", paymentId);
+            params.append("razorpay_order_id", orderId);
+            params.append("razorpay_signature", signature);
+            params.append("userId", userId);
+            params.append("fullName", document.getElementById("fullName").value);
+            params.append("mobile", document.getElementById("mobile").value);
+            params.append("pincode", document.getElementById("pincode").value);
+            params.append("locality", document.getElementById("locality").value);
+            params.append("address", document.getElementById("address").value);
+            params.append("city", document.getElementById("city").value);
+            params.append("state", document.getElementById("state").value);
+
+            if (fromCart === 'cart') params.append("checkoutType", "cart");
+            else if (productId) {
+                params.append("productId", productId);
+                params.append("checkoutType", "direct");
+            }
+
+            fetch("/VIZORA/VerifyPaymentServlet", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: params.toString()
             })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("An error occurred while placing the order.");
-                btn.innerHTML = 'PLACE ORDER';
-                btn.disabled = false;
+            .then(res => res.text())
+            .then(data => {
+                if (data.trim() === "success") {
+                    alert("🎉 Payment Successful & Order Confirmed!");
+                    window.location.href = "orders.html";
+                } else {
+                    alert("Verification Failed: " + data);
+                }
             });
         }
     </script>

@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/AdminOrdersServlet")
 public class AdminOrdersServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -44,10 +45,10 @@ public class AdminOrdersServlet extends HttpServlet {
                 }
                 first = false;
 
-                String fullAddress = rs.getString("address") + ", " + 
-                                     rs.getString("city") + ", " + 
-                                     rs.getString("state") + " - " + 
-                                     rs.getString("pincode");
+                String fullAddress = (rs.getString("address") != null ? rs.getString("address") : "") + ", " + 
+                                     (rs.getString("city") != null ? rs.getString("city") : "") + ", " + 
+                                     (rs.getString("state") != null ? rs.getString("state") : "") + " - " + 
+                                     (rs.getString("pincode") != null ? rs.getString("pincode") : "");
 
                 jsonBuilder.append("{");
                 jsonBuilder.append("\"orderId\":").append(rs.getInt("order_id")).append(",");

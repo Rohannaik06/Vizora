@@ -3,81 +3,78 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Locale;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 @WebServlet("/OrderHistoryServlet")
 public class OrderHistoryServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
 
-        String userIdParam = request.getParameter("userId");
-        if (userIdParam == null || userIdParam.trim().isEmpty()) {
+        String userIdStr = request.getParameter("userId");
+        if (userIdStr == null || userIdStr.trim().isEmpty()) {
             out.print("[]");
             return;
         }
 
-        try {
-            int userId = Integer.parseInt(userIdParam);
+        JSONArray ordersArray = new JSONArray();
 
-            try (Connection con = DBConnection.getConnection()) {
-                // Join the 3 tables to get order details + product images and names
-                String sql = "SELECT o.order_id, DATE_FORMAT(o.order_date, '%d %b %Y') AS order_date, " +
-                             "o.total_amount, o.order_status, p.product_name, p.brand, p.thumbnail " +
-                             "FROM orders o " +
-                             "JOIN order_items oi ON o.order_id = oi.order_id " +
-                             "JOIN products p ON oi.product_id = p.product_id " +
-                             "WHERE o.user_id = ? ORDER BY o.order_date DESC";
+        try (Connection con = DBConnection.getConnection()) {
+            // तुमच्या products टेबलमधील 'thumbnail', 'product_name', 'brand' हे अचूक कॉल्युम्स वापरले आहेत
+            String sql = "SELECT o.order_id, o.total_amount, o.order_status, o.order_date, o.payment_method, o.payment_id, " +
+                         "p.product_id, p.product_name, p.brand, p.selling_price, p.thumbnail, oi.quantity " +
+                         "FROM orders o " +
+                         "JOIN order_items oi ON o.order_id = oi.order_id " +
+                         "JOIN products p ON oi.product_id = p.product_id " +
+                         "WHERE o.user_id = ? ORDER BY o.order_date DESC";
 
-                try (PreparedStatement ps = con.prepareStatement(sql)) {
-                    ps.setInt(1, userId);
-                    try (ResultSet rs = ps.executeQuery()) {
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, Integer.parseInt(userIdStr));
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        JSONObject orderObj = new JSONObject();
+                        orderObj.put("orderId", rs.getInt("order_id"));
+                        orderObj.put("total", rs.getDouble("total_amount"));
+                        orderObj.put("status", rs.getString("order_status") != null ? rs.getString("order_status") : "CONFIRMED");
+                        orderObj.put("date", rs.getString("order_date") != null ? rs.getString("order_date") : "");
                         
-                        out.print("["); // Start JSON Array
-                        boolean isFirst = true;
+                        // पेमेंट मेथड (ONLINE किंवा COD)
+                        String dbPaymentMethod = rs.getString("payment_method");
+                        orderObj.put("paymentMethod", dbPaymentMethod != null ? dbPaymentMethod.trim().toUpperCase() : "COD");
+                        
+                        orderObj.put("paymentId", rs.getString("payment_id") != null ? rs.getString("payment_id") : "N/A");
+                        orderObj.put("productId", rs.getInt("product_id"));
+                        orderObj.put("name", rs.getString("product_name")); 
+                        orderObj.put("brand", rs.getString("brand") != null ? rs.getString("brand") : "Vizora"); 
+                        
+                        // प्रॉडक्टचा अचूक थंबनेल फोटो लोड करणे
+                        String thumb = rs.getString("thumbnail");
+                        orderObj.put("thumbnail", (thumb != null && !thumb.trim().isEmpty()) ? thumb.trim() : "default.jpg");
+                        
+                        orderObj.put("quantity", rs.getInt("quantity"));
 
-                        while (rs.next()) {
-                            if (!isFirst) {
-                                out.print(",");
-                            }
-                            
-                            String jsonObj = String.format(Locale.US,
-                                "{\"orderId\":%d, \"date\":\"%s\", \"total\":%.2f, \"status\":\"%s\", \"name\":\"%s\", \"brand\":\"%s\", \"thumbnail\":\"%s\"}",
-                                rs.getInt("order_id"),
-                                escapeJson(rs.getString("order_date")),
-                                rs.getDouble("total_amount"),
-                                escapeJson(rs.getString("order_status")),
-                                escapeJson(rs.getString("product_name")),
-                                escapeJson(rs.getString("brand")),
-                                escapeJson(rs.getString("thumbnail"))
-                            );
-                            out.print(jsonObj);
-                            isFirst = false;
-                        }
-                        out.print("]"); // End JSON Array
+                        ordersArray.put(orderObj);
                     }
                 }
             }
+            out.print(ordersArray.toString());
+
         } catch (Exception e) {
             e.printStackTrace();
-            out.print("[]"); // Return empty array on error
+            out.print("[]");
         }
-    }
-
-    private String escapeJson(String data) {
-        if (data == null) return "";
-        return data.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 }
